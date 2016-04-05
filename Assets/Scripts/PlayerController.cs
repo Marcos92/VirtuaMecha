@@ -108,8 +108,5 @@ public class PlayerController : MonoBehaviour {
             leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
             rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
         }
-
-        Debug.DrawRay(leftMuzzle.transform.position, leftMuzzle.transform.forward * 500, Color.red);
-        Debug.DrawRay(rightMuzzle.transform.position, rightMuzzle.transform.forward * 500, Color.red);
     }
 }
