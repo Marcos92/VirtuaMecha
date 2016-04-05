@@ -1,19 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
+public class Player : MonoBehaviour {
 
-    public float movementSpeed, rotationSpeed, armRotationSpeed;
-    private float maxArmRotationX, maxArmRotationY, armRotationX, armRotationY;
+    public float movementSpeed, strafeSpeed, rotationSpeed, armRotationSpeed;
+    float startingMovementSpeed, startingStrafeSpeed, startingRotationSpeed, startingArmRotationSpeed;
+    float maxArmRotationX, maxArmRotationY, armRotationX, armRotationY;
     public GameObject leftArm, rightArm;
-    public Transform leftAxisX, rightAxisX, leftAxisY, rightAxisY, leftMuzzle, rightMuzzle;
+    public Transform leftAxisX, rightAxisX, leftAxisY, rightAxisY;
     bool strafe = false;
+    public Gun leftWeapon, rightWeapon;
+    public Equip offensive, defensive;
+    bool immune;
 
 	// Use this for initialization
 	void Start ()
     {
-        maxArmRotationX = 45;
-        maxArmRotationY = 45;
+        startingMovementSpeed = movementSpeed;
+        startingStrafeSpeed = strafeSpeed;
+        startingRotationSpeed = rotationSpeed;
+        startingArmRotationSpeed = armRotationSpeed;
+
+        maxArmRotationX = 60;
+        maxArmRotationY = 60;
         armRotationX = 0;
         armRotationY = 0;
 	}
@@ -22,46 +31,27 @@ public class PlayerController : MonoBehaviour {
 	void Update ()
     {
         //Movement
-        if (strafe) transform.Translate((Vector3.forward * Input.GetAxis("VerticalLeft") + Vector3.right * Input.GetAxis("HorizontalLeft")) * Time.deltaTime * movementSpeed);
-        else
-        {
-            transform.Translate(Vector3.forward * Input.GetAxis("VerticalLeft") * Time.deltaTime * movementSpeed);
-            transform.Rotate(0, Input.GetAxis("HorizontalLeft") * Time.deltaTime * rotationSpeed, 0);
-        }
+        transform.Translate(Vector3.forward * Input.GetAxisRaw("VerticalLeft") * Time.deltaTime * movementSpeed);
+
+        if (strafe) transform.Translate(Vector3.right * Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * strafeSpeed);
+        else transform.Rotate(0, Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * rotationSpeed, 0);
 
         //Left weapon
         if (Input.GetButton("LeftWeapon"))
         {
-            Debug.Log("Left fire!");
-
-            Ray ray = new Ray(leftMuzzle.position, leftMuzzle.forward);
-            RaycastHit hit;
-
-            if(Physics.Raycast(ray, out hit, 500f))
-            {
-                Destroy(hit.collider.gameObject);
-            }
+            leftWeapon.Shoot();
         }
 
         //Right weapon
         if (Input.GetButton("RightWeapon"))
         {
-            Debug.Log("Right fire!");
-
-            Ray ray = new Ray(rightMuzzle.position, rightMuzzle.forward);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 500f))
-            {
-                Destroy(hit.collider.gameObject);
-            }
+            rightWeapon.Shoot();
         }
 
         //Special weapon
-        if (Input.GetAxis("SpecialWeapon") > 0)
+        if (Input.GetAxis("SpecialWeapon") > 0 || Input.GetButton("SpecialWeapon"))
         {
-            Debug.Log("Special fire!");
-            //Do FireS action
+            offensive.Activate();
         }
 
         //Melee
@@ -80,7 +70,6 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("Right punch!");
             //Do RightPunch action
         }
-
 
         //Strafe
         if (Input.GetAxis("Strafe") > 0) strafe = true; 
@@ -108,5 +97,42 @@ public class PlayerController : MonoBehaviour {
             leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
             rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
         }
+    }
+
+    public void ToggleMovement(bool on)
+    {
+        if(on)
+        {
+            movementSpeed = startingMovementSpeed;
+            rotationSpeed = startingRotationSpeed;
+            armRotationSpeed = startingArmRotationSpeed;
+            strafeSpeed = startingStrafeSpeed;
+        }
+        else 
+        {
+            movementSpeed = 0f;
+            rotationSpeed = 0f;
+            armRotationSpeed = 0f;
+            strafeSpeed = 0f;
+        }
+    }
+
+    public void ToggleShield(bool on)
+    {
+        if(on)
+        {
+            //draw shield
+            immune = true;
+        }
+        else
+        {
+            //erase shield
+            immune = false;
+        }
+    }
+
+    public void Repair()
+    {
+        //if currenthealth < health; currenthealth++
     }
 }

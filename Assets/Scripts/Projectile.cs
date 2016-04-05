@@ -7,27 +7,68 @@ public class Projectile : MonoBehaviour
     float speed;
     public int damage;
     public float lifetime;
+    float timer;
+    public bool explosive;
+    public float explosionRadius;
 
-	// Use this for initialization
+    public LayerMask collisionMask;
+
 	void Start ()
     {
-	
+        Destroy(gameObject, lifetime);
 	}
 	
-	// Update is called once per frame
 	void Update ()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        //Movement
+        float moveDistance = speed * Time.deltaTime;
+        CheckCollision(moveDistance);
+        transform.Translate(Vector3.forward * moveDistance);
 	}
 
-    void OnTriggerEnter(Collider c)
+    void CheckCollision(float moveDistance)
     {
-        if(c.gameObject.tag != "Projectile" && c.gameObject.tag != "Player") Destroy(gameObject);
-        //calcular dano
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, moveDistance, collisionMask, QueryTriggerInteraction.Collide))
+        {
+            OnHitObject(hit);
+        }
     }
+
+    void OnHitObject(RaycastHit hit)
+    {
+        //Debug.Log("Collision");
+
+        //hit.collider.
+
+        if(explosive)
+        {
+            Explosion();
+        }
+
+        Destroy(gameObject);
+    }
+
+    //void OnHitObject(Collider c)
+    //{
+    //    //c.
+    //}
 
     public void SetSpeed(float speed)
     {
         this.speed = speed;
+    }
+
+    public void Explosion()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
+
+        for (int i = 0; i < hitColliders.Length; i++)
+        {
+            if (hitColliders[i].gameObject.tag == "Enemy") { }
+                //dar dano
+        }
     }
 }

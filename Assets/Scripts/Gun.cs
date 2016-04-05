@@ -21,19 +21,19 @@ public class Gun : MonoBehaviour
 	void Start ()
     {
         currentAmmo = maxAmmo;
-        nextShotTime = Time.time + timeBetweenShots / 1000f;
+        nextShotTime = Time.time;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        Shoot();
+        //Shoot();
 
         //Debug laser sight
         Debug.DrawRay(muzzle.transform.position, muzzle.transform.forward * 500, Color.red);
     }
 
-    void Shoot()
+    public void Shoot()
     {
         if(Time.time > nextShotTime && currentAmmo > 0)
         {
@@ -53,5 +53,10 @@ public class Gun : MonoBehaviour
                 p.SetSpeed(v);
             }
         }
+    }
+
+    public void Reload()
+    {
+        currentAmmo = maxAmmo;
     }
 }
