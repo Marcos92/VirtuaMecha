@@ -42,6 +42,7 @@ public class Projectile : MonoBehaviour
         //Debug.Log("Collision");
 
         //hit.collider.
+        //dano
 
         if(explosive)
         {
@@ -67,8 +68,13 @@ public class Projectile : MonoBehaviour
 
         for (int i = 0; i < hitColliders.Length; i++)
         {
-            if (hitColliders[i].gameObject.tag == "Enemy") { }
+            if (hitColliders[i].gameObject.tag == "Enemy")
+            {
                 //dar dano
+                //explodir objectos destrutiveis
+            }
         }
+
+        Destroy(gameObject);
     }
 }

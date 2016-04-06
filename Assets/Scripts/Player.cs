@@ -99,7 +99,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void ToggleMovement(bool on)
+    void ToggleMovement(bool on)
     {
         if(on)
         {
@@ -115,6 +115,19 @@ public class Player : MonoBehaviour {
             armRotationSpeed = 0f;
             strafeSpeed = 0f;
         }
+    }
+
+    public void ToggleMovementTimer(float time)
+    {
+        StartCoroutine("_ToggleMovementTimer", time);
+    }
+
+    IEnumerator _ToggleMovementTimer(float time)
+    {
+        ToggleMovement(false);
+        yield return new WaitForSeconds(time);
+        ToggleMovement(true);
+        StopCoroutine("_ToggleMovementTimer");
     }
 
     public void ToggleShield(bool on)

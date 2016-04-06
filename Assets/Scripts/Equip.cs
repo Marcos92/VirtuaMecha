@@ -9,6 +9,34 @@ public class Equip : MonoBehaviour {
     public float cooldown;
     float nextActivationTime, turnOffTime;
 
+    [Header("Turret")]
+    public float turretDuration;
+    public float timeBetweenShots;
+    public float projectileSpeed;
+    public float rotationSpeed;
+    public float reach;
+    float nextShotTime;
+    public Projectile projectile;
+
+    [Header("Mine")]
+    public Mine mine;
+    public Transform mineSpawnPoint;
+    public string enemyTag;
+
+    [Header("EMP")]
+    public float effectRadius;
+    public float shockDuration;
+
+    [Header("Shield")]
+    public float shieldDuration;
+
+    [Header("Repair")]
+    public float repairDuration;
+
+    [Header("Boost")]
+    public float boostSpeed;
+
+
 	void Start () 
     {
         nextActivationTime = Time.time;
@@ -30,13 +58,37 @@ public class Equip : MonoBehaviour {
 
     IEnumerator Turret()
     {
-        float duration = 2f;
-        turnOffTime = Time.time + duration;
+        turnOffTime = Time.time + turretDuration;
+        nextShotTime = Time.time;
+
+        Transform muzzle = transform.Find("Muzzle").transform;
 
         while(Time.time < turnOffTime)
         {
-            //pew pew
-            Debug.Log("Shooting");
+            //Rotation
+            GameObject[] targets = GameObject.FindGameObjectsWithTag("Enemy");
+            float distance = Mathf.Infinity;
+            Vector3 position = transform.position;
+            GameObject target = null;
+
+            foreach (GameObject t in targets) //Get all targets in reach and find the closest
+            {
+                float newDistance = (position - t.transform.position).sqrMagnitude;
+
+                if (newDistance < distance && newDistance <= reach) target = t;
+            }
+
+            if (target != null) //Point to target
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((target.transform.position - transform.position).normalized), Time.deltaTime * rotationSpeed);
+
+            //Shooting
+            if (Time.time > nextShotTime)
+            {
+                nextShotTime = Time.time + timeBetweenShots / 1000f;
+
+                Projectile p = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;
+                p.SetSpeed(projectileSpeed);
+            }
 
             yield return null;
         }
@@ -47,9 +99,10 @@ public class Equip : MonoBehaviour {
 
     IEnumerator Mine()
     {
-        //dropmine
-
         yield return null;
+
+        Mine m = Instantiate(mine, mineSpawnPoint.position, mineSpawnPoint.rotation) as Mine;
+        m.SetEnemyTag(enemyTag);
 
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
@@ -57,9 +110,17 @@ public class Equip : MonoBehaviour {
 
     IEnumerator EMP()
     {
-        //attack
-
         yield return null;
+
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, effectRadius);
+
+        for (int i = 0; i < hitColliders.Length; i++)
+        {
+            if (hitColliders[i].gameObject.layer == 9) //9 == Enemy layer
+            {
+                //enemy.togglemovemnttimer(shockDuration)
+            }
+        }
 
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
@@ -67,8 +128,7 @@ public class Equip : MonoBehaviour {
 
     IEnumerator Shield()
     {
-        float duration = 2f;
-        turnOffTime = Time.time + duration;
+        turnOffTime = Time.time + turretDuration;
 
         while (Time.time < turnOffTime)
         {
@@ -85,8 +145,7 @@ public class Equip : MonoBehaviour {
 
     IEnumerator Repair()
     {
-        float duration = 2f;
-        turnOffTime = Time.time + duration;
+        turnOffTime = Time.time + turretDuration;
 
         //cant move
 
