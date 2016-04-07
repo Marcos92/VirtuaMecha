@@ -3,7 +3,9 @@ using System.Collections;
 
 public class Equip : MonoBehaviour {
 
-    string name;
+    public enum Name { Turret, Mine, EMP, Shield, Repair, Boost };
+    public Name name;
+    string n;
     public enum Type { Offensive, Defensive };
     public Type type;
     public float cooldown;
@@ -40,7 +42,7 @@ public class Equip : MonoBehaviour {
 	void Start () 
     {
         nextActivationTime = Time.time;
-        name = gameObject.name;
+        n = name.ToString();
 	}
 	
 	void Update () 
@@ -52,7 +54,7 @@ public class Equip : MonoBehaviour {
     {
         if(Time.time > nextActivationTime)
         {
-            StartCoroutine(name);
+            StartCoroutine(n);
         }
     }
 
@@ -94,7 +96,7 @@ public class Equip : MonoBehaviour {
         }
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(n);
     }
 
     IEnumerator Mine()
@@ -105,7 +107,7 @@ public class Equip : MonoBehaviour {
         m.SetEnemyTag(enemyTag);
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(n);
     }
 
     IEnumerator EMP()
@@ -123,7 +125,7 @@ public class Equip : MonoBehaviour {
         }
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(n);
     }
 
     IEnumerator Shield()
@@ -140,7 +142,7 @@ public class Equip : MonoBehaviour {
         //shields down
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(n);
     }
 
     IEnumerator Repair()
@@ -158,7 +160,7 @@ public class Equip : MonoBehaviour {
         //can move
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(n);
     }
 
     IEnumerator Boost()
@@ -168,6 +170,6 @@ public class Equip : MonoBehaviour {
         yield return null;
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(n);
     }
 }

@@ -11,6 +11,8 @@ public class Player : MonoBehaviour {
     bool strafe = false;
     public Gun leftWeapon, rightWeapon;
     public Equip offensive, defensive;
+    public float maxHealth;
+    float currentHealth;
     bool immune;
 
 	// Use this for initialization
@@ -144,8 +146,12 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void Repair()
+    public void ChangeHealth(float value)
     {
-        //if currenthealth < health; currenthealth++
+        if (value < 0 && immune) return; //Life does not decrease while immune
+
+        currentHealth += value; //Add value to current life
+
+        if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
     }
 }
