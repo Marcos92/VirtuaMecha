@@ -1,7 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{7215729E-18C6-AED4-BED9-FA36D42CDC69}") = "VirtuaMecha", "Assembly-CSharp.csproj", "{8CD71343-8841-EEDC-FCC0-3223FC95A09F}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtuaMecha.CSharp", "VirtuaMecha.CSharp.csproj", "{127CDF4B-0142-A2A9-7CCB-2240FEE1B224}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8CD71343-8841-EEDC-FCC0-3223FC95A09F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8CD71343-8841-EEDC-FCC0-3223FC95A09F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8CD71343-8841-EEDC-FCC0-3223FC95A09F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8CD71343-8841-EEDC-FCC0-3223FC95A09F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{127CDF4B-0142-A2A9-7CCB-2240FEE1B224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{127CDF4B-0142-A2A9-7CCB-2240FEE1B224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{127CDF4B-0142-A2A9-7CCB-2240FEE1B224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{127CDF4B-0142-A2A9-7CCB-2240FEE1B224}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

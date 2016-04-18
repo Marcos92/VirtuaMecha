@@ -6,10 +6,9 @@ public class Player : MonoBehaviour {
     public float movementSpeed, strafeSpeed, rotationSpeed, armRotationSpeed;
     float startingMovementSpeed, startingStrafeSpeed, startingRotationSpeed, startingArmRotationSpeed;
     float maxArmRotationX, maxArmRotationY, armRotationX, armRotationY;
-    public GameObject leftArm, rightArm;
-    public Transform leftAxisX, rightAxisX, leftAxisY, rightAxisY;
+    Arm leftArm, rightArm;
+    Transform leftAxisX, rightAxisX, leftAxisY, rightAxisY;
     bool strafe = false;
-    public Gun leftWeapon, rightWeapon;
     public Equip offensive, defensive;
     public float maxHealth;
     float currentHealth;
@@ -18,6 +17,15 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        leftArm = gameObject.transform.FindChild("LeftArm").transform.GetComponent<Arm>();
+        rightArm = gameObject.transform.FindChild("RightArm").transform.GetComponent<Arm>();
+
+        leftAxisY = gameObject.transform.FindChild("LeftAxisY").transform;
+        rightAxisY = gameObject.transform.FindChild("RightAxisY").transform;
+
+        leftAxisX = leftArm.transform.FindChild("LeftAxisX").transform;
+        rightAxisX = rightArm.transform.FindChild("RightAxisX").transform;
+
         startingMovementSpeed = movementSpeed;
         startingStrafeSpeed = strafeSpeed;
         startingRotationSpeed = rotationSpeed;
@@ -27,6 +35,9 @@ public class Player : MonoBehaviour {
         maxArmRotationY = 60;
         armRotationX = 0;
         armRotationY = 0;
+
+        Equip o = Instantiate(offensive);
+        Equip d = Instantiate(defensive);
 	}
 	
 	// Update is called once per frame
@@ -34,26 +45,31 @@ public class Player : MonoBehaviour {
     {
         //Movement
         transform.Translate(Vector3.forward * Input.GetAxisRaw("VerticalLeft") * Time.deltaTime * movementSpeed);
-
         if (strafe) transform.Translate(Vector3.right * Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * strafeSpeed);
         else transform.Rotate(0, Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * rotationSpeed, 0);
 
         //Left weapon
         if (Input.GetButton("LeftWeapon"))
         {
-            leftWeapon.Shoot();
+            leftArm.gun.Shoot();
         }
 
         //Right weapon
         if (Input.GetButton("RightWeapon"))
         {
-            rightWeapon.Shoot();
+            rightArm.gun.Shoot();
         }
 
-        //Special weapon
-        if (Input.GetAxis("SpecialWeapon") > 0 || Input.GetButton("SpecialWeapon"))
+        //Offensive equipment
+        if (Input.GetAxis("Offensive") > 0 || Input.GetButton("Offensive"))
         {
             offensive.Activate();
+        }
+
+        //Defensive equipment
+        if (Input.GetAxis("Defensive") > 0 || Input.GetButton("Defensive"))
+        {
+            defensive.Activate();
         }
 
         //Melee
