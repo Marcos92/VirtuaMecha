@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Gun : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     public float projectileSpeed;
     public float timeBetweenShots; //ms
     float nextShotTime; 
     public int maxAmmo;
-    int currentAmmo;
+    [HideInInspector]
+    public int currentAmmo;
     public int projectilesPerShot = 1;
     [Range(0.0f, 90.0f)]
     public float coneAngle = 0f;

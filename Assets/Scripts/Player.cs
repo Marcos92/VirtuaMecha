@@ -6,38 +6,46 @@ public class Player : MonoBehaviour {
     public float movementSpeed, strafeSpeed, rotationSpeed, armRotationSpeed;
     float startingMovementSpeed, startingStrafeSpeed, startingRotationSpeed, startingArmRotationSpeed;
     float maxArmRotationX, maxArmRotationY, armRotationX, armRotationY;
-    Arm leftArm, rightArm;
+    [HideInInspector]
+    public Arm leftArm, rightArm;
     Transform leftAxisX, rightAxisX, leftAxisY, rightAxisY;
     bool strafe = false;
     public Equip offensive, defensive;
     public float maxHealth;
-    float currentHealth;
-    bool immune;
+    public float currentHealth;
+    public bool immune;
 
 	// Use this for initialization
 	void Start ()
     {
+        //Associate arms to player
         leftArm = gameObject.transform.FindChild("LeftArm").transform.GetComponent<Arm>();
         rightArm = gameObject.transform.FindChild("RightArm").transform.GetComponent<Arm>();
 
+        //Define arm rotation axes
         leftAxisY = gameObject.transform.FindChild("LeftAxisY").transform;
         rightAxisY = gameObject.transform.FindChild("RightAxisY").transform;
-
         leftAxisX = leftArm.transform.FindChild("LeftAxisX").transform;
         rightAxisX = rightArm.transform.FindChild("RightAxisX").transform;
 
+        //Save starting speeds
         startingMovementSpeed = movementSpeed;
         startingStrafeSpeed = strafeSpeed;
         startingRotationSpeed = rotationSpeed;
         startingArmRotationSpeed = armRotationSpeed;
 
+        //Arm rotation
         maxArmRotationX = 60;
         maxArmRotationY = 60;
         armRotationX = 0;
         armRotationY = 0;
 
-        Equip o = Instantiate(offensive);
-        Equip d = Instantiate(defensive);
+        //Equips
+        EquipEquipment(offensive);
+        EquipEquipment(defensive);
+
+        //Health
+        ChangeHealth(maxHealth);
 	}
 	
 	// Update is called once per frame
@@ -51,13 +59,13 @@ public class Player : MonoBehaviour {
         //Left weapon
         if (Input.GetButton("LeftWeapon"))
         {
-            leftArm.gun.Shoot();
+            if (leftArm.currentHealth > 0) leftArm.weapon.Shoot();
         }
 
         //Right weapon
         if (Input.GetButton("RightWeapon"))
         {
-            rightArm.gun.Shoot();
+            if(rightArm.currentHealth > 0) rightArm.weapon.Shoot();
         }
 
         //Offensive equipment
@@ -117,7 +125,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    void ToggleMovement(bool on)
+    public void ToggleMovement(bool on)
     {
         if(on)
         {
@@ -169,5 +177,17 @@ public class Player : MonoBehaviour {
         currentHealth += value; //Add value to current life
 
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
+    }
+
+    public void EquipEquipment(Equip newEquipment)
+    {
+        if (newEquipment.type == Equip.Type.Offensive) Destroy(gameObject.transform.FindChild(offensive.name));
+        else Destroy(gameObject.transform.FindChild(defensive.name));
+
+        Equip e = Instantiate(newEquipment, transform.position, transform.rotation) as Equip;
+        e.transform.SetParent(transform);
+
+        if (newEquipment.type == Equip.Type.Offensive) offensive = e;
+        else defensive = e;
     }
 }

@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Equip : MonoBehaviour {
-
-    public enum Name { Turret, Mine, EMP, Shield, Repair, Boost };
-    public Name name;
-    string n;
+public class Equip : MonoBehaviour 
+{
+    string name;
     public enum Type { Offensive, Defensive };
     public Type type;
     public float cooldown;
     float nextActivationTime, turnOffTime;
+    Player player;
 
     [Header("Turret")]
     public float turretDuration;
@@ -38,11 +37,17 @@ public class Equip : MonoBehaviour {
     [Header("Boost")]
     public float boostSpeed;
 
-
 	void Start () 
     {
+        //When you can use the equip
         nextActivationTime = Time.time;
-        n = name.ToString();
+
+        //Type of equip
+        name = gameObject.name;
+        name = name.Replace("(Clone)", "");
+
+        //Associate player to equip
+        player = transform.parent.GetComponent<Player>();
 	}
 	
 	void Update () 
@@ -54,7 +59,7 @@ public class Equip : MonoBehaviour {
     {
         if(Time.time > nextActivationTime)
         {
-            StartCoroutine(n);
+            StartCoroutine(name);
         }
     }
 
@@ -96,7 +101,7 @@ public class Equip : MonoBehaviour {
         }
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(n);
+        StopCoroutine(name);
     }
 
     IEnumerator Mine()
@@ -107,7 +112,7 @@ public class Equip : MonoBehaviour {
         m.SetEnemyTag(enemyTag);
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(n);
+        StopCoroutine(name);
     }
 
     IEnumerator EMP()
@@ -120,47 +125,47 @@ public class Equip : MonoBehaviour {
         {
             if (hitColliders[i].gameObject.layer == 9) //9 == Enemy layer
             {
-                //enemy.togglemovemnttimer(shockDuration)
+                hitColliders[i].gameObject.transform.GetComponent<Player>().ToggleMovementTimer(shockDuration);
             }
         }
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(n);
+        StopCoroutine(name);
     }
 
     IEnumerator Shield()
     {
-        turnOffTime = Time.time + turretDuration;
+        turnOffTime = Time.time + shieldDuration;
 
         while (Time.time < turnOffTime)
         {
-            //shields up
-
+            player.ToggleShield(true);
             yield return null;
         }
 
-        //shields down
+        player.ToggleShield(false);
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(n);
+        StopCoroutine(name);
     }
 
     IEnumerator Repair()
     {
-        turnOffTime = Time.time + turretDuration;
+        yield return null;
 
-        //cant move
+        turnOffTime = Time.time + repairDuration;
 
-        while (Time.time < turnOffTime)
+        player.ToggleMovement(false);
+
+        while (Time.time < turnOffTime && player.currentHealth < player.maxHealth)
         {
-            //repair
-            yield return null;
+            player.ChangeHealth(Time.deltaTime * player.maxHealth / repairDuration);
         }
 
-        //can move
+        player.ToggleMovement(true);
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(n);
+        StopCoroutine(name);
     }
 
     IEnumerator Boost()
@@ -170,6 +175,6 @@ public class Equip : MonoBehaviour {
         yield return null;
 
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(n);
+        StopCoroutine(name);
     }
 }

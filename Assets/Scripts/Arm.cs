@@ -3,16 +3,23 @@ using System.Collections;
 
 public class Arm : MonoBehaviour {
 
-    public Gun gun;
+    public Weapon weapon;
+    public float maxHealth;
     [HideInInspector]
-    public float health;
+    public float currentHealth;
+    Player player;
 
 	// Use this for initialization
 	void Start ()
     {
-        Gun g = Instantiate(gun, transform.position, transform.rotation) as Gun;
-        g.transform.SetParent(transform);
-        gun = g;
+        //Associate player to arm
+        player = transform.parent.transform.GetComponent<Player>(); 
+
+        //Health
+        ChangeHealth(maxHealth);
+
+        //Weapon
+        EquipWeapon(weapon);
 	}
 	
 	// Update is called once per frame
@@ -20,4 +27,23 @@ public class Arm : MonoBehaviour {
     {
 	
 	}
+
+    public void ChangeHealth(float value)
+    {
+        if (value < 0 && player.immune) return; //Life does not decrease while immune
+
+        currentHealth += value; //Add value to current life
+
+        if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
+    }
+
+    public void EquipWeapon(Weapon newWeapon)
+    {
+        Destroy(gameObject.transform.FindChild(weapon.name)); //Destroy previous weapon
+
+        Weapon w = Instantiate(newWeapon, transform.position, transform.rotation) as Weapon;
+        w.transform.SetParent(transform);
+
+        weapon = w;
+    }
 }
