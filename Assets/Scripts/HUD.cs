@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour 
 {
-    Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, shield;
+    Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive;
     Player player;
 
 	// Use this for initialization
@@ -17,21 +17,22 @@ public class HUD : MonoBehaviour
         leftHealth = transform.FindChild("LeftArmHealth").GetComponent<Text>();
         rightAmmo = transform.FindChild("RightWeaponAmmo").GetComponent<Text>();
         leftAmmo = transform.FindChild("LeftWeaponAmmo").GetComponent<Text>();
-        shield = transform.FindChild("Shield").GetComponent<Text>();
+        offensive = transform.FindChild("Offensive").GetComponent<Text>();
+        defensive = transform.FindChild("Defensive").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
-        health.text = "Health\n" + player.currentHealth;
+        health.text = "Health\n" + player.currentHealth.ToString("0");
 
-        leftHealth.text = "Health: " + player.leftArm.currentHealth;
-        rightHealth.text = "Health: " + player.rightArm.currentHealth;
+        leftHealth.text = "Health: " + player.leftArm.currentHealth.ToString("0");
+        rightHealth.text = "Health: " + player.rightArm.currentHealth.ToString("0");
 
         leftAmmo.text = "Ammo: " + player.leftArm.weapon.currentAmmo;
         rightAmmo.text = "Ammo: " + player.rightArm.weapon.currentAmmo;
 
-        if (player.immune) shield.text = "SHIELDS UP";
-        else shield.text = "";
+        offensive.text = player.offensive.info;
+        defensive.text = player.defensive.info;
 	}
 }

@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour {
-
+public class Player : MonoBehaviour 
+{
     public float movementSpeed, strafeSpeed, rotationSpeed, armRotationSpeed;
-    float startingMovementSpeed, startingStrafeSpeed, startingRotationSpeed, startingArmRotationSpeed;
     float maxArmRotationX, maxArmRotationY, armRotationX, armRotationY;
     [HideInInspector]
     public Arm leftArm, rightArm;
     Transform leftAxisX, rightAxisX, leftAxisY, rightAxisY;
     bool strafe = false;
     public Equip offensive, defensive;
-    public float maxHealth;
-    public float currentHealth;
-    public bool immune;
+    public float maxHealth, currentHealth;
+    [HideInInspector]
+    public bool immune, cantMove, cantRotate;
+    public bool controlable;
 
 	// Use this for initialization
 	void Start ()
@@ -27,12 +27,6 @@ public class Player : MonoBehaviour {
         rightAxisY = gameObject.transform.FindChild("RightAxisY").transform;
         leftAxisX = leftArm.transform.FindChild("LeftAxisX").transform;
         rightAxisX = rightArm.transform.FindChild("RightAxisX").transform;
-
-        //Save starting speeds
-        startingMovementSpeed = movementSpeed;
-        startingStrafeSpeed = strafeSpeed;
-        startingRotationSpeed = rotationSpeed;
-        startingArmRotationSpeed = armRotationSpeed;
 
         //Arm rotation
         maxArmRotationX = 60;
@@ -51,109 +45,126 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        //Movement
-        transform.Translate(Vector3.forward * Input.GetAxisRaw("VerticalLeft") * Time.deltaTime * movementSpeed);
-        if (strafe) transform.Translate(Vector3.right * Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * strafeSpeed);
-        else transform.Rotate(0, Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * rotationSpeed, 0);
-
-        //Left weapon
-        if (Input.GetButton("LeftWeapon"))
+        if(controlable)
         {
-            if (leftArm.currentHealth > 0) leftArm.weapon.Shoot();
-        }
+            //Movement
+            if (!cantMove)
+            {
+                transform.Translate(Vector3.forward * Input.GetAxisRaw("VerticalLeft") * Time.deltaTime * movementSpeed);
+                if (strafe) transform.Translate(Vector3.right * Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * strafeSpeed);
+                else transform.Rotate(0, Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * rotationSpeed, 0);
+            }
 
-        //Right weapon
-        if (Input.GetButton("RightWeapon"))
-        {
-            if(rightArm.currentHealth > 0) rightArm.weapon.Shoot();
-        }
+            //Left weapon
+            if (Input.GetButton("LeftWeapon"))
+            {
+                if (leftArm.currentHealth > 0) leftArm.weapon.Shoot();
+            }
 
-        //Offensive equipment
-        if (Input.GetAxis("Offensive") > 0 || Input.GetButton("Offensive"))
-        {
-            offensive.Activate();
-        }
+            //Right weapon
+            if (Input.GetButton("RightWeapon"))
+            {
+                if (rightArm.currentHealth > 0) rightArm.weapon.Shoot();
+            }
 
-        //Defensive equipment
-        if (Input.GetAxis("Defensive") > 0 || Input.GetButton("Defensive"))
-        {
-            defensive.Activate();
-        }
+            //Offensive equipment
+            if (Input.GetAxis("Offensive") > 0 || Input.GetButton("Offensive"))
+            {
+                offensive.Activate();
+            }
 
-        //Melee
-        if (Input.GetButton("MeleeLeft") && Input.GetButton("MeleeRight"))
-        {
-            Debug.Log("Special punch!");
-            //Do SpecialMelee action
-        }
-        else if (Input.GetButton("MeleeLeft"))
-        {
-            Debug.Log("Left punch!");
-            //Do LeftPunch action
-        }
-        else if (Input.GetButton("MeleeRight"))
-        {
-            Debug.Log("Right punch!");
-            //Do RightPunch action
-        }
+            //Defensive equipment
+            if (Input.GetAxis("Defensive") > 0 || Input.GetButton("Defensive"))
+            {
+                defensive.Activate();
+            }
 
-        //Strafe
-        if (Input.GetAxis("Strafe") > 0) strafe = true; 
-        else strafe = false;
+            //Melee
+            if (Input.GetButton("MeleeLeft") && Input.GetButton("MeleeRight"))
+            {
+                Debug.Log("Special punch!");
+                //Do SpecialMelee action
+            }
+            else if (Input.GetButton("MeleeLeft"))
+            {
+                Debug.Log("Left punch!");
+                //Do LeftPunch action
+            }
+            else if (Input.GetButton("MeleeRight"))
+            {
+                Debug.Log("Right punch!");
+                //Do RightPunch action
+            }
 
-        //Aim
-        //Limit rotation
-        armRotationX = Mathf.Clamp(armRotationX, -maxArmRotationX, maxArmRotationX);
-        armRotationY = Mathf.Clamp(armRotationY, -maxArmRotationY, maxArmRotationY);
+            //Strafe
+            if (Input.GetAxis("Strafe") > 0) strafe = true;
+            else strafe = false;
 
-        //Player input
-        armRotationX += Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed;
-        armRotationY += Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed;
-        
-        //Vertical aim
-        if (armRotationY > -maxArmRotationY && armRotationY < maxArmRotationY)
-        {
-            leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
-            rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
-        }
+            //Aim
+            //Limit rotation
+            armRotationX = Mathf.Clamp(armRotationX, -maxArmRotationX, maxArmRotationX);
+            armRotationY = Mathf.Clamp(armRotationY, -maxArmRotationY, maxArmRotationY);
 
-        //Horizontal aim
-        if (armRotationX > -maxArmRotationX && armRotationX < maxArmRotationX)
-        {
-            leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
-            rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+            //Player input
+            if (!cantRotate)
+            {
+                armRotationX += Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed;
+                armRotationY += Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed;
+            }
+
+            //Vertical aim
+            if (armRotationY > -maxArmRotationY && armRotationY < maxArmRotationY)
+            {
+                leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+                rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+            }
+
+            //Horizontal aim
+            if (armRotationX > -maxArmRotationX && armRotationX < maxArmRotationX)
+            {
+                leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+            }
         }
     }
 
     public void ToggleMovement(bool on)
     {
-        if(on)
+        if (on)
         {
-            movementSpeed = startingMovementSpeed;
-            rotationSpeed = startingRotationSpeed;
-            armRotationSpeed = startingArmRotationSpeed;
-            strafeSpeed = startingStrafeSpeed;
+            cantMove = false;
         }
-        else 
+        else
         {
-            movementSpeed = 0f;
-            rotationSpeed = 0f;
-            armRotationSpeed = 0f;
-            strafeSpeed = 0f;
+            cantMove = true;
         }
     }
 
-    public void ToggleMovementTimer(float time)
+    public void ToggleRotation(bool on)
     {
-        StartCoroutine("_ToggleMovementTimer", time);
+        if (on)
+        {
+            cantRotate = false;
+        }
+        else
+        {
+            cantRotate = true;
+        }
     }
 
-    IEnumerator _ToggleMovementTimer(float time)
+    public void EMPEffect(float time)
+    {
+        StartCoroutine("_EMPEffect", time);
+    }
+
+    IEnumerator _EMPEffect(float time)
     {
         ToggleMovement(false);
+        ToggleRotation(false);
         yield return new WaitForSeconds(time);
+        ToggleRotation(true);
         ToggleMovement(true);
-        StopCoroutine("_ToggleMovementTimer");
+        StopCoroutine("_EMPEffect");
     }
 
     public void ToggleShield(bool on)

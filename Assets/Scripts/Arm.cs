@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Arm : MonoBehaviour {
-
+public class Arm : MonoBehaviour 
+{
     public Weapon weapon;
-    public float maxHealth;
-    [HideInInspector]
-    public float currentHealth;
+    public float maxHealth, currentHealth;
     Player player;
 
 	// Use this for initialization

@@ -9,6 +9,9 @@ public class Equip : MonoBehaviour
     public float cooldown;
     float nextActivationTime, turnOffTime;
     Player player;
+    [HideInInspector]
+    public string info;
+    bool ctivated;
 
     [Header("Turret")]
     public float turretDuration;
@@ -36,6 +39,7 @@ public class Equip : MonoBehaviour
 
     [Header("Boost")]
     public float boostSpeed;
+    public float boostDuration;
 
 	void Start () 
     {
@@ -48,16 +52,19 @@ public class Equip : MonoBehaviour
 
         //Associate player to equip
         player = transform.parent.GetComponent<Player>();
+
+        info = name + "\nREADY";
 	}
 	
 	void Update () 
     {
-        
+        if (Time.time < nextActivationTime) info = name + "\nCOOLDOWN: " + (nextActivationTime - Time.time).ToString("00.00") + "s";
+        else if (info.Contains("COOLDOWN")) info = name + "\nREADY";
 	}
 
     public void Activate()
     {
-        if(Time.time > nextActivationTime)
+        if(Time.time > nextActivationTime && !activated)
         {
             StartCoroutine(name);
         }
@@ -85,17 +92,19 @@ public class Equip : MonoBehaviour
                 if (newDistance < distance && newDistance <= reach) target = t;
             }
 
-            if (target != null) //Point to target
+            if (target != null && Time.time > nextShotTime)
+            {
+                info = name + "\nSHOOTING";
+
+                //Point to target
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((target.transform.position - transform.position).normalized), Time.deltaTime * rotationSpeed);
 
-            //Shooting
-            if (Time.time > nextShotTime)
-            {
+                //Shooting
                 nextShotTime = Time.time + timeBetweenShots / 1000f;
-
                 Projectile p = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;
                 p.SetSpeed(projectileSpeed);
             }
+            else if (target == null) info = name + "\nNO TARGET";
 
             yield return null;
         }
@@ -125,7 +134,7 @@ public class Equip : MonoBehaviour
         {
             if (hitColliders[i].gameObject.layer == 9) //9 == Enemy layer
             {
-                hitColliders[i].gameObject.transform.GetComponent<Player>().ToggleMovementTimer(shockDuration);
+                hitColliders[i].gameObject.transform.GetComponent<Player>().EMPEffect(shockDuration);
             }
         }
 
@@ -135,14 +144,10 @@ public class Equip : MonoBehaviour
 
     IEnumerator Shield()
     {
-        turnOffTime = Time.time + shieldDuration;
+        info = name + "\nSHIELDS UP";
 
-        while (Time.time < turnOffTime)
-        {
-            player.ToggleShield(true);
-            yield return null;
-        }
-
+        player.ToggleShield(true);
+        yield return new WaitForSeconds(shieldDuration);
         player.ToggleShield(false);
 
         nextActivationTime = Time.time + cooldown;
@@ -151,18 +156,23 @@ public class Equip : MonoBehaviour
 
     IEnumerator Repair()
     {
-        yield return null;
+        info = name + "\nREPAIRING";
 
         turnOffTime = Time.time + repairDuration;
 
         player.ToggleMovement(false);
+        player.ToggleRotation(false);
 
-        while (Time.time < turnOffTime && player.currentHealth < player.maxHealth)
+        while (Time.time < turnOffTime && (player.currentHealth < player.maxHealth || player.leftArm.currentHealth < player.leftArm.maxHealth || player.rightArm.currentHealth < player.rightArm.maxHealth))
         {
-            player.ChangeHealth(Time.deltaTime * player.maxHealth / repairDuration);
+            player.ChangeHealth(player.maxHealth * Time.deltaTime / repairDuration);
+            player.leftArm.ChangeHealth(player.leftArm.maxHealth * Time.deltaTime / repairDuration);
+            player.rightArm.ChangeHealth(player.rightArm.maxHealth * Time.deltaTime / repairDuration);
+            yield return null;
         }
 
         player.ToggleMovement(true);
+        player.ToggleRotation(true);
 
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
@@ -170,9 +180,19 @@ public class Equip : MonoBehaviour
 
     IEnumerator Boost()
     {
-        //boost
+        info = name + "\nBOOSTING";
 
-        yield return null;
+        turnOffTime = Time.time + boostDuration;
+
+        player.ToggleMovement(false);
+
+        while(Time.time < turnOffTime)
+        {
+            player.transform.Translate(Vector3.forward * Time.deltaTime * boostSpeed);
+            yield return null;
+        } 
+
+        player.ToggleMovement(true);
 
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
