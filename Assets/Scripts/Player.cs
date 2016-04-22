@@ -11,9 +11,9 @@ public class Player : MonoBehaviour
     bool strafe = false;
     public Equip offensive, defensive;
     public float maxHealth, currentHealth;
-    [HideInInspector]
-    public bool immune, cantMove, cantRotate;
-    public bool controlable;
+    //[HideInInspector]
+    public bool immune, canMove = true, canRotate = true;
+    public bool controlable = true;
 
 	// Use this for initialization
 	void Start ()
@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         if(controlable)
         {
             //Movement
-            if (!cantMove)
+            if (canMove)
             {
                 transform.Translate(Vector3.forward * Input.GetAxisRaw("VerticalLeft") * Time.deltaTime * movementSpeed);
                 if (strafe) transform.Translate(Vector3.right * Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * strafeSpeed);
@@ -106,49 +106,49 @@ public class Player : MonoBehaviour
             armRotationY = Mathf.Clamp(armRotationY, -maxArmRotationY, maxArmRotationY);
 
             //Player input
-            if (!cantRotate)
+            if (canRotate)
             {
                 armRotationX += Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed;
                 armRotationY += Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed;
-            }
 
-            //Vertical aim
-            if (armRotationY > -maxArmRotationY && armRotationY < maxArmRotationY)
-            {
-                leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
-                rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
-            }
+                //Vertical aim
+                if (armRotationY > -maxArmRotationY && armRotationY < maxArmRotationY)
+                {
+                    leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+                    rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+                }
 
-            //Horizontal aim
-            if (armRotationX > -maxArmRotationX && armRotationX < maxArmRotationX)
-            {
-                leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
-                rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                //Horizontal aim
+                if (armRotationX > -maxArmRotationX && armRotationX < maxArmRotationX)
+                {
+                    leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                    rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                }
             }
         }
     }
 
     public void ToggleMovement(bool on)
     {
-        if (on)
+        if (!on)
         {
-            cantMove = false;
+            canMove = false;
         }
         else
         {
-            cantMove = true;
+            canMove = true;
         }
     }
 
     public void ToggleRotation(bool on)
     {
-        if (on)
+        if (!on)
         {
-            cantRotate = false;
+            canRotate = false;
         }
         else
         {
-            cantRotate = true;
+            canRotate = true;
         }
     }
 

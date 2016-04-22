@@ -64,8 +64,8 @@ public class Equip : MonoBehaviour
 
     public void Activate()
     {
-        if(Time.time > nextActivationTime && !activated)
-        {
+        if(Time.time > nextActivationTime)
+        { 
             StartCoroutine(name);
         }
     }
