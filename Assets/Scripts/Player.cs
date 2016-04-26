@@ -192,8 +192,8 @@ public class Player : MonoBehaviour
 
     public void EquipEquipment(Equip newEquipment)
     {
-        if (newEquipment.type == Equip.Type.Offensive) Destroy(gameObject.transform.FindChild(offensive.name));
-        else Destroy(gameObject.transform.FindChild(defensive.name));
+        if (newEquipment.type == Equip.Type.Offensive && transform.FindChild(offensive.name) != null) Destroy(transform.FindChild(offensive.name).gameObject);
+        else if (transform.FindChild(defensive.name) != null) Destroy(transform.FindChild(defensive.name).gameObject);
 
         Equip e = Instantiate(newEquipment, transform.position, transform.rotation) as Equip;
         e.transform.SetParent(transform);

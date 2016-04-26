@@ -47,6 +47,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Arm.cs" />
      <Compile Include="Assets\Scripts\Equip.cs" />
+     <Compile Include="Assets\Scripts\EquipMenu.cs" />
      <Compile Include="Assets\Scripts\HUD.cs" />
      <Compile Include="Assets\Scripts\Mine.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />

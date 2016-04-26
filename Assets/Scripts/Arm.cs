@@ -37,7 +37,7 @@ public class Arm : MonoBehaviour
 
     public void EquipWeapon(Weapon newWeapon)
     {
-        Destroy(gameObject.transform.FindChild(weapon.name)); //Destroy previous weapon
+        if (transform.FindChild(weapon.name) != null) Destroy(transform.FindChild(weapon.name).gameObject); //Destroy previous weapon
 
         Weapon w = Instantiate(newWeapon, transform.position, transform.rotation) as Weapon;
         w.transform.SetParent(transform);

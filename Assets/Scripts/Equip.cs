@@ -11,7 +11,8 @@ public class Equip : MonoBehaviour
     Player player;
     [HideInInspector]
     public string info;
-    bool ctivated;
+    public string description;
+    bool activated;
 
     [Header("Turret")]
     public float turretDuration;

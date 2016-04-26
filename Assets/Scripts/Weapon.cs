@@ -18,6 +18,8 @@ public class Weapon : MonoBehaviour
     public Transform muzzle;
     public Projectile projectile;
 
+    public string description;
+
 	// Use this for initialization
 	void Start ()
     {
