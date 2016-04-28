@@ -27,6 +27,8 @@ public class Player : MonoBehaviour
         rightAxisY = gameObject.transform.FindChild("RightAxisY").transform;
         leftAxisX = leftArm.transform.FindChild("LeftAxisX").transform;
         rightAxisX = rightArm.transform.FindChild("RightAxisX").transform;
+        leftAxisY.position = leftAxisX.position;
+        rightAxisY.position = rightAxisX.position;
 
         //Arm rotation
         maxArmRotationX = 60;

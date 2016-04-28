@@ -4,8 +4,10 @@ using System.Collections;
 public class Arm : MonoBehaviour 
 {
     public Weapon weapon;
+    public Transform slot;
     public float maxHealth, currentHealth;
     Player player;
+    bool flip;
 
 	// Use this for initialization
 	void Start ()
@@ -37,10 +39,20 @@ public class Arm : MonoBehaviour
 
     public void EquipWeapon(Weapon newWeapon)
     {
+        bool flip = false;
+        if (gameObject.name.Contains("Left")) flip = true;
+
         if (transform.FindChild(weapon.name) != null) Destroy(transform.FindChild(weapon.name).gameObject); //Destroy previous weapon
 
-        Weapon w = Instantiate(newWeapon, transform.position, transform.rotation) as Weapon;
+        Weapon w = Instantiate(newWeapon, slot.position, slot.rotation) as Weapon;
         w.transform.SetParent(transform);
+        w.transform.localScale = transform.localScale;
+
+        if(flip) 
+        {
+            Vector3 v = w.transform.localScale;
+            w.transform.localScale = new Vector3(-v.x, v.y, v.z);
+        }
 
         weapon = w;
     }
