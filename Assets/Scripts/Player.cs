@@ -142,19 +142,8 @@ public class Player : MonoBehaviour
 
     public void ToggleRotation(bool on)
     {
-        if (!on)
-        {
-            canRotate = false;
-        }
-        else
-        {
-            canRotate = true;
-        }
-    }
-
-    public void EMPEffect(float time)
-    {
-        StartCoroutine("_EMPEffect", time);
+        if (!on) canRotate = false; 
+        else canRotate = true; 
     }
 
     IEnumerator _EMPEffect(float time)

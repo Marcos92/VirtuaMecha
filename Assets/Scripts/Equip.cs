@@ -135,7 +135,7 @@ public class Equip : MonoBehaviour
         {
             if (hitColliders[i].gameObject.layer == 9) //9 == Enemy layer
             {
-                hitColliders[i].gameObject.transform.GetComponent<Player>().EMPEffect(shockDuration);
+                hitColliders[i].gameObject.transform.GetComponent<Player>().StartCoroutine("EMPEffect", shockDuration);
             }
         }
 
