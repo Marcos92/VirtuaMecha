@@ -15,6 +15,11 @@ public class Player : MonoBehaviour
     public bool immune, canMove = true, canRotate = true;
     public bool controlable = true;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
 	// Use this for initialization
 	void Start ()
     {

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EquipMenu : MonoBehaviour 
 {
@@ -98,5 +99,13 @@ public class EquipMenu : MonoBehaviour
         player.EquipEquipment(selectedDefensive); //Equips equipment
 
         textDef.text = selectedDefensive.description + "\nCooldown: " + selectedDefensive.cooldown + "s";
+    }
+
+    public void Confirm()
+    {
+        player.controlable = true;
+        player.transform.Find("Body").gameObject.SetActive(false);
+        player.transform.Find("Cockpit").gameObject.SetActive(true);
+        SceneManager.LoadScene("TestScene");
     }
 }
