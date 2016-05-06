@@ -106,6 +106,7 @@ public class EquipMenu : MonoBehaviour
         player.controlable = true;
         player.transform.Find("Body").gameObject.SetActive(false);
         player.transform.Find("Cockpit").gameObject.SetActive(true);
+        player.transform.Find("Camera").gameObject.SetActive(true);
         SceneManager.LoadScene("TestScene");
     }
 }
