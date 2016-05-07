@@ -21,6 +21,15 @@ ModelImporter:
     100026: Cylinder
     100028: Cylinder.001
     100030: //RootNode
+    100032: Camera
+    100034: Lamp
+    100036: Cube.013
+    100038: Cube.014
+    100040: Cube.015
+    100042: Cube.016
+    100044: Cube.017
+    100046: Cube.018
+    100048: Cube.019
     400000: Cube
     400002: Cube.001
     400004: Cube.002
@@ -37,6 +46,15 @@ ModelImporter:
     400026: Cylinder
     400028: Cylinder.001
     400030: //RootNode
+    400032: Camera
+    400034: Lamp
+    400036: Cube.013
+    400038: Cube.014
+    400040: Cube.015
+    400042: Cube.016
+    400044: Cube.017
+    400046: Cube.018
+    400048: Cube.019
     2300000: Cube
     2300002: Cube.001
     2300004: Cube.002
@@ -52,6 +70,13 @@ ModelImporter:
     2300024: Cube.012
     2300026: Cylinder
     2300028: Cylinder.001
+    2300030: Cube.013
+    2300032: Cube.014
+    2300034: Cube.015
+    2300036: Cube.016
+    2300038: Cube.017
+    2300040: Cube.018
+    2300042: Cube.019
     3300000: Cube
     3300002: Cube.001
     3300004: Cube.002
@@ -67,6 +92,13 @@ ModelImporter:
     3300024: Cube.012
     3300026: Cylinder
     3300028: Cylinder.001
+    3300030: Cube.013
+    3300032: Cube.014
+    3300034: Cube.015
+    3300036: Cube.016
+    3300038: Cube.017
+    3300040: Cube.018
+    3300042: Cube.019
     4300000: Cube.012
     4300002: Cube.011
     4300004: Cube.010
@@ -82,6 +114,13 @@ ModelImporter:
     4300024: Cube.004
     4300026: Cube.002
     4300028: Cube.001
+    4300030: Cube.019
+    4300032: Cube.018
+    4300034: Cube.017
+    4300036: Cube.016
+    4300038: Cube.015
+    4300040: Cube.014
+    4300042: Cube.013
   materials:
     importMaterials: 1
     materialName: 0
