@@ -37,12 +37,17 @@ public class EquipMenu : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-	
+        if (player.leftArm.weapon == null) player.leftArm.EquipWeapon(weapons[0]);
+        if (player.rightArm.weapon == null) player.rightArm.EquipWeapon(weapons[0]);
+        if (player.offensive == null) player.EquipEquipment(offensive[0]);
+        if (player.defensive == null) player.EquipEquipment(defensive[0]);
+
+        RotateModel();
 	}
 
-    public void RotateModel(float side)
+    public void RotateModel()
     {
-        player.transform.Rotate(0, side * 3f, 0);
+        player.transform.Rotate(Input.GetAxisRaw("VerticalRight") * 0f, Input.GetAxisRaw("HorizontalRight") * 3f, 0);
     }
 
     public void CycleLeftWeapon(int direction)
@@ -107,6 +112,7 @@ public class EquipMenu : MonoBehaviour
         player.transform.Find("Body").gameObject.SetActive(false);
         player.transform.Find("Cockpit").gameObject.SetActive(true);
         player.transform.Find("Camera").gameObject.SetActive(true);
+
         SceneManager.LoadScene("TestScene");
     }
 }

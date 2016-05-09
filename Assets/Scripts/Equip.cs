@@ -12,7 +12,7 @@ public class Equip : MonoBehaviour
     [HideInInspector]
     public string info;
     public string description;
-    bool activated;
+    bool active = false;
 
     [Header("Turret")]
     public float turretDuration;
@@ -60,12 +60,12 @@ public class Equip : MonoBehaviour
 	void Update () 
     {
         if (Time.time < nextActivationTime) info = name + "\nCOOLDOWN: " + (nextActivationTime - Time.time).ToString("00.00") + "s";
-        else if (info.Contains("COOLDOWN")) info = name + "\nREADY";
+        else if (!active) info = name + "\nREADY";
 	}
 
     public void Activate()
     {
-        if(Time.time > nextActivationTime)
+        if(Time.time > nextActivationTime && !active)
         { 
             StartCoroutine(name);
         }
@@ -73,6 +73,7 @@ public class Equip : MonoBehaviour
 
     IEnumerator Turret()
     {
+        active = true;
         turnOffTime = Time.time + turretDuration;
         nextShotTime = Time.time;
 
@@ -110,6 +111,7 @@ public class Equip : MonoBehaviour
             yield return null;
         }
 
+        active = false;
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
     }
@@ -117,10 +119,12 @@ public class Equip : MonoBehaviour
     IEnumerator Mine()
     {
         yield return null;
+        active = true;
 
         Mine m = Instantiate(mine, mineSpawnPoint.position, mineSpawnPoint.rotation) as Mine;
         m.SetEnemyTag(enemyTag);
 
+        active = false;
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
     }
@@ -128,6 +132,7 @@ public class Equip : MonoBehaviour
     IEnumerator EMP()
     {
         yield return null;
+        active = true;
 
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, effectRadius);
 
@@ -139,30 +144,42 @@ public class Equip : MonoBehaviour
             }
         }
 
+        active = false;
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
     }
 
     IEnumerator Shield()
     {
+        active = true;
         info = name + "\nSHIELDS UP";
 
         player.ToggleShield(true);
         yield return new WaitForSeconds(shieldDuration);
         player.ToggleShield(false);
 
+        active = false;
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
     }
 
     IEnumerator Repair()
     {
+        float newCooldown = cooldown;
+
+        if (player.currentHealth == player.maxHealth && player.leftArm.currentHealth == player.leftArm.maxHealth && player.rightArm.currentHealth == player.rightArm.maxHealth)
+        {
+            newCooldown = 0f; //If at full health and repair is used you won't have to wait for cooldown
+        }
+
+        active = true;
+
         info = name + "\nREPAIRING";
 
         turnOffTime = Time.time + repairDuration;
 
-        player.ToggleMovement(false);
-        player.ToggleRotation(false);
+        player.ToggleMovement();
+        player.ToggleRotation();
 
         while (Time.time < turnOffTime && (player.currentHealth < player.maxHealth || player.leftArm.currentHealth < player.leftArm.maxHealth || player.rightArm.currentHealth < player.rightArm.maxHealth))
         {
@@ -172,20 +189,23 @@ public class Equip : MonoBehaviour
             yield return null;
         }
 
-        player.ToggleMovement(true);
-        player.ToggleRotation(true);
+        player.ToggleMovement();
+        player.ToggleRotation();
 
-        nextActivationTime = Time.time + cooldown;
+        active = false;
+        nextActivationTime = Time.time + newCooldown;
         StopCoroutine(name);
     }
 
     IEnumerator Boost()
     {
+        active = true;
+
         info = name + "\nBOOSTING";
 
         turnOffTime = Time.time + boostDuration;
 
-        player.ToggleMovement(false);
+        player.ToggleMovement();
 
         while(Time.time < turnOffTime)
         {
@@ -193,8 +213,9 @@ public class Equip : MonoBehaviour
             yield return null;
         } 
 
-        player.ToggleMovement(true);
+        player.ToggleMovement();
 
+        active = false;
         nextActivationTime = Time.time + cooldown;
         StopCoroutine(name);
     }

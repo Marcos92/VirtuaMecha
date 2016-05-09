@@ -19,3 +19,4 @@ C:\Users\Marcos Rodrigues\Documents\GitHub\VirtuaMecha\Temp\bin\Debug\UnityEngin
 C:\Users\Marcos Rodrigues\Documents\GitHub\VirtuaMecha\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\Marcos Rodrigues\Documents\GitHub\VirtuaMecha\obj\Debug\Assembly-CSharp.dll
 C:\Users\Marcos Rodrigues\Documents\GitHub\VirtuaMecha\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Marcos Rodrigues\Documents\GitHub\VirtuaMecha\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb

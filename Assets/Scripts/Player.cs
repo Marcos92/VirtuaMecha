@@ -14,6 +14,13 @@ public class Player : MonoBehaviour
     //[HideInInspector]
     public bool immune, canMove = true, canRotate = true;
     public bool controlable = true;
+    public HUD hud;
+
+    [Header("Lights")]
+    public GameObject cockpitLights;
+    public Color normalLights, dangerLights;
+    public float minIntensity, maxIntensity, intensityFactor;
+    bool lightCoroutine = false;
 
     void Awake()
     {
@@ -36,14 +43,10 @@ public class Player : MonoBehaviour
         rightAxisY.position = rightAxisX.position;
 
         //Arm rotation
-        maxArmRotationX = 60;
+        maxArmRotationX = 30;
         maxArmRotationY = 60;
         armRotationX = 0;
         armRotationY = 0;
-
-        //Equips
-        EquipEquipment(offensive);
-        EquipEquipment(defensive);
 
         //Health
         ChangeHealth(maxHealth);
@@ -52,7 +55,9 @@ public class Player : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(controlable)
+        //Controls
+        #region
+        if (controlable)
         {
             //Movement
             if (canMove)
@@ -63,13 +68,13 @@ public class Player : MonoBehaviour
             }
 
             //Left weapon
-            if (Input.GetButton("LeftWeapon"))
+            if (Input.GetButton("LeftWeapon") && leftArm.currentHealth > 0)
             {
                 if (leftArm.currentHealth > 0) leftArm.weapon.Shoot();
             }
 
             //Right weapon
-            if (Input.GetButton("RightWeapon"))
+            if (Input.GetButton("RightWeapon") && rightArm.currentHealth > 0)
             {
                 if (rightArm.currentHealth > 0) rightArm.weapon.Shoot();
             }
@@ -104,8 +109,7 @@ public class Player : MonoBehaviour
             }
 
             //Strafe
-            if (Input.GetAxis("Strafe") > 0) strafe = true;
-            else strafe = false;
+            if (Input.GetButtonDown("Strafe")) strafe = !strafe;
 
             //Aim
             //Limit rotation
@@ -121,59 +125,76 @@ public class Player : MonoBehaviour
                 //Vertical aim
                 if (armRotationY > -maxArmRotationY && armRotationY < maxArmRotationY)
                 {
-                    leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
-                    rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+                    if (leftArm.currentHealth > 0) leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+                    if (rightArm.currentHealth > 0) rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
                 }
 
                 //Horizontal aim
                 if (armRotationX > -maxArmRotationX && armRotationX < maxArmRotationX)
                 {
-                    leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
-                    rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                    if (leftArm.currentHealth > 0) leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                    if (rightArm.currentHealth > 0) rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
                 }
             }
         }
-    }
+        #endregion
 
-    public void ToggleMovement(bool on)
-    {
-        if (!on)
+        if (currentHealth < maxHealth / 3)
         {
-            canMove = false;
+            ChangeLightColor(dangerLights);
+            if (!lightCoroutine)
+            {
+                StartCoroutine("ChangeLightIntensity");
+                lightCoroutine = true;
+            }
         }
         else
         {
-            canMove = true;
+            ChangeLightColor(normalLights);
+            if (lightCoroutine)
+            {
+                StopCoroutine("ChangeLightIntensity");
+                lightCoroutine = false;
+            }
         }
+
+        if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
     }
 
-    public void ToggleRotation(bool on)
+    public void ToggleMovement()
     {
-        if (!on) canRotate = false; 
-        else canRotate = true; 
+        canMove = !canMove;
     }
 
-    IEnumerator _EMPEffect(float time)
+    public void ToggleRotation()
     {
-        ToggleMovement(false);
-        ToggleRotation(false);
+        canRotate = !canRotate;
+    }
+
+    IEnumerator EMPEffect(float time)
+    {
+        ToggleMovement();
+        ToggleRotation();
+        cockpitLights.SetActive(false);
+        hud.gameObject.SetActive(false);
         yield return new WaitForSeconds(time);
-        ToggleRotation(true);
-        ToggleMovement(true);
-        StopCoroutine("_EMPEffect");
+        cockpitLights.SetActive(true);
+        hud.gameObject.SetActive(true);
+        ToggleRotation();
+        ToggleMovement();
+        StopCoroutine("EMPEffect");
     }
 
     public void ToggleShield(bool on)
     {
-        if(on)
+        immune = !immune;
+        if (immune)
         {
-            //draw shield
-            immune = true;
+            //draw shield 
         }
         else
         {
-            //erase shield
-            immune = false;
+            //hide shield
         }
     }
 
@@ -188,13 +209,41 @@ public class Player : MonoBehaviour
 
     public void EquipEquipment(Equip newEquipment)
     {
-        if (newEquipment.type == Equip.Type.Offensive && transform.FindChild(offensive.name) != null) Destroy(transform.FindChild(offensive.name).gameObject);
-        else if (transform.FindChild(defensive.name) != null) Destroy(transform.FindChild(defensive.name).gameObject);
+        if (newEquipment.type == Equip.Type.Offensive && offensive != null) Destroy(transform.FindChild(offensive.name).gameObject);
+        else if (defensive != null) Destroy(transform.FindChild(defensive.name).gameObject);
 
         Equip e = Instantiate(newEquipment, transform.position, transform.rotation) as Equip;
         e.transform.SetParent(transform);
 
         if (newEquipment.type == Equip.Type.Offensive) offensive = e;
         else defensive = e;
+    }
+
+    void ChangeLightColor(Color newColor)
+    {
+        Light[] lights = cockpitLights.GetComponentsInChildren<Light>(); 
+
+        foreach (Light light in lights)
+        {
+            light.color = newColor;
+        }
+    }
+
+    IEnumerator ChangeLightIntensity()
+    {
+        int toggle = -1;
+        Light[] lights = cockpitLights.GetComponentsInChildren<Light>();
+
+        while(true)
+        {
+            if (lights[0].intensity > maxIntensity || lights[0].intensity <= minIntensity) toggle *= -1;
+
+            foreach (Light light in lights)
+            {
+                light.intensity += toggle * intensityFactor;
+                Debug.Log(light.intensity);
+            }
+            yield return null;
+        }
     }
 }

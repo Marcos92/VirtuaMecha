@@ -17,9 +17,6 @@ public class Arm : MonoBehaviour
 
         //Health
         ChangeHealth(maxHealth);
-
-        //Weapon
-        EquipWeapon(weapon);
 	}
 	
 	// Update is called once per frame
@@ -42,7 +39,7 @@ public class Arm : MonoBehaviour
         bool flip = false;
         if (gameObject.name.Contains("Left")) flip = true;
 
-        if (transform.FindChild(weapon.name) != null) Destroy(transform.FindChild(weapon.name).gameObject); //Destroy previous weapon
+        if (weapon != null) Destroy(transform.FindChild(weapon.name).gameObject); //Destroy previous weapon
 
         Weapon w = Instantiate(newWeapon, slot.position, slot.rotation) as Weapon;
         w.transform.SetParent(transform);
