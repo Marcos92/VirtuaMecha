@@ -19,6 +19,7 @@ public class Weapon : MonoBehaviour
     public Projectile projectile;
 
     public string description;
+    public Sprite icon;
 
 	// Use this for initialization
 	void Start ()
@@ -30,8 +31,6 @@ public class Weapon : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        //Shoot();
-
         //Debug laser sight
         Debug.DrawRay(muzzle.transform.position, muzzle.transform.forward * 500, Color.red);
     }

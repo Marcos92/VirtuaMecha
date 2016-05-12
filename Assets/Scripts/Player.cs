@@ -14,13 +14,19 @@ public class Player : MonoBehaviour
     //[HideInInspector]
     public bool immune, canMove = true, canRotate = true;
     public bool controlable = true;
-    public HUD hud;
 
     [Header("Lights")]
     public GameObject cockpitLights;
     public Color normalLights, dangerLights;
     public float minIntensity, maxIntensity, intensityFactor;
     bool lightCoroutine = false;
+
+    [Header("HUD")]
+    public Color normalColor;
+    public Color cautionColor;
+    public Color alertColor;
+    public Color dangerColor;
+    public HUD hud;
 
     void Awake()
     {
@@ -139,8 +145,11 @@ public class Player : MonoBehaviour
         }
         #endregion
 
-        if (currentHealth < maxHealth / 3)
+
+        
+        if (currentHealth < maxHealth / 8)
         {
+            ChangeHUDColor(dangerColor);
             ChangeLightColor(dangerLights);
             if (!lightCoroutine)
             {
@@ -148,8 +157,27 @@ public class Player : MonoBehaviour
                 lightCoroutine = true;
             }
         }
+        else if (currentHealth < maxHealth / 4)
+        {
+            ChangeHUDColor(alertColor);
+            if (lightCoroutine)
+            {
+                StopCoroutine("ChangeLightIntensity");
+                lightCoroutine = false;
+            }
+        }
+        if (currentHealth < maxHealth / 2)
+        {
+            ChangeHUDColor(cautionColor);
+            if (lightCoroutine)
+            {
+                StopCoroutine("ChangeLightIntensity");
+                lightCoroutine = false;
+            }
+        }
         else
         {
+            ChangeHUDColor(normalColor);
             ChangeLightColor(normalLights);
             if (lightCoroutine)
             {
@@ -158,7 +186,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
+        //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
     }
 
     public void ToggleMovement()
@@ -241,9 +269,15 @@ public class Player : MonoBehaviour
             foreach (Light light in lights)
             {
                 light.intensity += toggle * intensityFactor;
-                Debug.Log(light.intensity);
             }
             yield return null;
         }
+    }
+
+    void ChangeHUDColor(Color newColor)
+    {
+        hud.body.color = newColor;
+        hud.leftLeg.color = newColor;
+        hud.rightLeg.color = newColor;
     }
 }

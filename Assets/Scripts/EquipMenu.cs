@@ -20,6 +20,11 @@ public class EquipMenu : MonoBehaviour
     public Text textOff;
     public Text textDef;
 
+    public Image iconLW;
+    public Image iconRW;
+    public Image iconOff;
+    public Image iconDef;
+
 	// Use this for initialization
 	void Start () 
     {
@@ -32,6 +37,11 @@ public class EquipMenu : MonoBehaviour
         textRW.text = selectedRightWeapon.description + "\nAmmo capacity: " + selectedRightWeapon.maxAmmo + "\nRate of fire: " + selectedRightWeapon.timeBetweenShots/1000 + "s";
         textOff.text = selectedOffensive.description + "\nCooldown: " + selectedOffensive.cooldown + "s";
         textDef.text = selectedDefensive.description + "\nCooldown: " + selectedDefensive.cooldown + "s";
+
+        iconLW.sprite = selectedLeftWeapon.icon;
+        iconRW.sprite = selectedRightWeapon.icon;
+        iconOff.sprite = selectedOffensive.icon;
+        iconDef.sprite = selectedDefensive.icon;
 	}
 	
 	// Update is called once per frame
@@ -62,6 +72,7 @@ public class EquipMenu : MonoBehaviour
         player.leftArm.EquipWeapon(selectedLeftWeapon); //Equips weapon
 
         textLW.text = selectedLeftWeapon.description + "\nAmmo capacity: " + selectedLeftWeapon.maxAmmo + "\nRate of fire: " + selectedLeftWeapon.timeBetweenShots + "ms";
+        iconLW.sprite = selectedLeftWeapon.icon;
     }
 
     public void CycleRightWeapon(int direction)
@@ -76,6 +87,7 @@ public class EquipMenu : MonoBehaviour
         player.rightArm.EquipWeapon(selectedRightWeapon); //Equips weapon
 
         textRW.text = selectedRightWeapon.description + "\nAmmo capacity: " + selectedRightWeapon.maxAmmo + "\nRate of fire: " + selectedRightWeapon.timeBetweenShots + "ms";
+        iconRW.sprite = selectedRightWeapon.icon;
     }
 
     public void CycleOffensive(int direction)
@@ -90,6 +102,7 @@ public class EquipMenu : MonoBehaviour
         player.EquipEquipment(selectedOffensive); //Equips equipment
 
         textOff.text = selectedOffensive.description + "\nCooldown: " + selectedOffensive.cooldown + "s";
+        iconOff.sprite = selectedOffensive.icon;
     }
 
     public void CycleDefensive(int direction)
@@ -104,6 +117,7 @@ public class EquipMenu : MonoBehaviour
         player.EquipEquipment(selectedDefensive); //Equips equipment
 
         textDef.text = selectedDefensive.description + "\nCooldown: " + selectedDefensive.cooldown + "s";
+        iconDef.sprite = selectedDefensive.icon;
     }
 
     public void Confirm()

@@ -13,6 +13,7 @@ public class Equip : MonoBehaviour
     public string info;
     public string description;
     bool active = false;
+    public Sprite icon;
 
     [Header("Turret")]
     public float turretDuration;

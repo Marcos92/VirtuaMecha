@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class HUD : MonoBehaviour 
 {
     Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive;
+    public Image body, leftArm, rightArm, leftLeg, rightLeg;
     Player player;
 
 	// Use this for initialization
