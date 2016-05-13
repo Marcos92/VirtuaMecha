@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
 
         //Health
         ChangeHealth(maxHealth);
+        hud.health.text = "Health\n" + currentHealth.ToString("0"); //Write health to HUD
 	}
 	
 	// Update is called once per frame
@@ -145,49 +146,9 @@ public class Player : MonoBehaviour
         }
         #endregion
 
-        #region HealthUpdate 
-        // Não é preciso fazer isto no update, pode só ser feito quando se vai alterar o valor da vida
-        if (currentHealth < maxHealth / 8)
-        {
-            ChangeHUDColor(dangerColor);
-            ChangeLightColor(dangerLights);
-            if (!lightCoroutine)
-            {
-                StartCoroutine("ChangeLightIntensity");
-                lightCoroutine = true;
-            }
-        }
-        else if (currentHealth < maxHealth / 4)
-        {
-            ChangeHUDColor(alertColor);
-            if (lightCoroutine)
-            {
-                StopCoroutine("ChangeLightIntensity");
-                lightCoroutine = false;
-            }
-        }
-        if (currentHealth < maxHealth / 2)
-        {
-            ChangeHUDColor(cautionColor);
-            if (lightCoroutine)
-            {
-                StopCoroutine("ChangeLightIntensity");
-                lightCoroutine = false;
-            }
-        }
-        else
-        {
-            ChangeHUDColor(normalColor);
-            ChangeLightColor(normalLights);
-            if (lightCoroutine)
-            {
-                StopCoroutine("ChangeLightIntensity");
-                lightCoroutine = false;
-            }
-        }
-        #endregion
-
         //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
+        //if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
+        if (Input.GetKeyDown(KeyCode.Space)) leftArm.ChangeHealth(-5);
     }
 
     public void ToggleMovement()
@@ -234,6 +195,50 @@ public class Player : MonoBehaviour
         currentHealth += value; //Add value to current life
 
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
+        else if (currentHealth <= 0) //DIE
+
+        hud.health.text = "Health\n" + currentHealth.ToString("0"); //Write health to HUD
+
+        #region HealthUpdateHUD
+        if (currentHealth < maxHealth / 8)
+        {
+            ChangeHUDColor(dangerColor);
+            ChangeLightColor(dangerLights);
+            if (!lightCoroutine)
+            {
+                StartCoroutine("ChangeLightIntensity");
+                lightCoroutine = true;
+            }
+        }
+        else if (currentHealth >= maxHealth / 8 && currentHealth < maxHealth / 4)
+        {
+            ChangeHUDColor(alertColor);
+            if (lightCoroutine)
+            {
+                StopCoroutine("ChangeLightIntensity");
+                lightCoroutine = false;
+            }
+        }
+        else if (currentHealth >= maxHealth / 4 && currentHealth < maxHealth / 2)
+        {
+            ChangeHUDColor(cautionColor);
+            if (lightCoroutine)
+            {
+                StopCoroutine("ChangeLightIntensity");
+                lightCoroutine = false;
+            }
+        }
+        else if (currentHealth >= maxHealth / 2)
+        {
+            ChangeHUDColor(normalColor);
+            ChangeLightColor(normalLights);
+            if (lightCoroutine)
+            {
+                StopCoroutine("ChangeLightIntensity");
+                lightCoroutine = false;
+            }
+        }
+        #endregion
     }
 
     public void EquipEquipment(Equip newEquipment)

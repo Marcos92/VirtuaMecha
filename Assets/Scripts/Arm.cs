@@ -6,7 +6,7 @@ public class Arm : MonoBehaviour
     public Weapon weapon;
     public Transform slot;
     public float maxHealth, currentHealth;
-    Player player;
+    public Player player;
     bool flip;
 
 	// Use this for initialization
@@ -32,6 +32,15 @@ public class Arm : MonoBehaviour
         currentHealth += value; //Add value to current life
 
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
+
+        if(gameObject.name.Contains("Left")) player.hud.leftHealth.text = "Health: " + currentHealth.ToString("0");
+        else player.hud.rightHealth.text = "Health: " + currentHealth.ToString("0");
+
+        if (currentHealth <= 0) ChangeHUDColor(new Color(0, 0, 0, 100));
+        else if (currentHealth < maxHealth / 8) ChangeHUDColor(player.dangerColor);
+        else if (currentHealth >= maxHealth / 8 && currentHealth < maxHealth / 4) ChangeHUDColor(player.alertColor);
+        else if (currentHealth >= maxHealth / 4 && currentHealth < maxHealth / 2) ChangeHUDColor(player.cautionColor);
+        else if (currentHealth >= maxHealth / 2) ChangeHUDColor(player.normalColor);
     }
 
     public void EquipWeapon(Weapon newWeapon)
@@ -52,5 +61,11 @@ public class Arm : MonoBehaviour
         }
 
         weapon = w;
+    }
+
+    void ChangeHUDColor(Color newColor)
+    {
+        if (gameObject.name.Contains("Left")) player.hud.leftArm.color = newColor;
+        else player.hud.rightArm.color = newColor;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Equip : MonoBehaviour 
 {
-    string name;
+    string equipName;
     public enum Type { Offensive, Defensive };
     public Type type;
     public float cooldown;
@@ -49,26 +49,39 @@ public class Equip : MonoBehaviour
         nextActivationTime = Time.time;
 
         //Type of equip
-        name = gameObject.name;
-        name = name.Replace("(Clone)", "");
+        equipName = gameObject.name;
+        equipName = equipName.Replace("(Clone)", "");
 
         //Associate player to equip
         player = transform.parent.GetComponent<Player>();
 
-        info = name + "\nREADY";
+        info = equipName + "\nREADY";
+
+        if(type == Type.Offensive) player.hud.offensive.text = player.offensive.info;
+        else player.hud.defensive.text = player.defensive.info;
 	}
 	
 	void Update () 
     {
-        if (Time.time < nextActivationTime) info = name + "\nCOOLDOWN: " + (nextActivationTime - Time.time).ToString("00.00") + "s";
-        else if (!active) info = name + "\nREADY";
+        if (Time.time < nextActivationTime)
+        {
+            info = equipName + "\nCOOLDOWN: " + (nextActivationTime - Time.time).ToString("0") + "s";
+            if (type == Type.Offensive) player.hud.offensive.text = player.offensive.info;
+            else player.hud.defensive.text = player.defensive.info;
+        }
+        else if (!active)
+        {
+            info = equipName + "\nREADY";
+            if (type == Type.Offensive) player.hud.offensive.text = player.offensive.info;
+            else player.hud.defensive.text = player.defensive.info;
+        }
 	}
 
     public void Activate()
     {
         if(Time.time > nextActivationTime && !active)
         { 
-            StartCoroutine(name);
+            StartCoroutine(equipName);
         }
     }
 
@@ -97,7 +110,8 @@ public class Equip : MonoBehaviour
 
             if (target != null && Time.time > nextShotTime)
             {
-                info = name + "\nSHOOTING";
+                info = equipName + "\nSHOOTING";
+                player.hud.offensive.text = player.offensive.info;
 
                 //Point to target
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((target.transform.position - transform.position).normalized), Time.deltaTime * rotationSpeed);
@@ -107,14 +121,18 @@ public class Equip : MonoBehaviour
                 Projectile p = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;
                 p.SetSpeed(projectileSpeed);
             }
-            else if (target == null) info = name + "\nNO TARGET";
+            else if (target == null)
+            {
+                info = equipName + "\nNO TARGET";
+                player.hud.offensive.text = player.offensive.info;
+            }
 
             yield return null;
         }
 
         active = false;
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(equipName);
     }
 
     IEnumerator Mine()
@@ -127,7 +145,7 @@ public class Equip : MonoBehaviour
 
         active = false;
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(equipName);
     }
 
     IEnumerator EMP()
@@ -147,13 +165,14 @@ public class Equip : MonoBehaviour
 
         active = false;
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(equipName);
     }
 
     IEnumerator Shield()
     {
         active = true;
-        info = name + "\nSHIELDS UP";
+        info = equipName + "\nSHIELDS UP";
+        player.hud.defensive.text = player.defensive.info;
 
         player.ToggleShield(true);
         yield return new WaitForSeconds(shieldDuration);
@@ -161,7 +180,7 @@ public class Equip : MonoBehaviour
 
         active = false;
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(equipName);
     }
 
     IEnumerator Repair()
@@ -175,7 +194,8 @@ public class Equip : MonoBehaviour
 
         active = true;
 
-        info = name + "\nREPAIRING";
+        info = equipName + "\nREPAIRING";
+        player.hud.defensive.text = player.defensive.info;
 
         turnOffTime = Time.time + repairDuration;
 
@@ -195,14 +215,15 @@ public class Equip : MonoBehaviour
 
         active = false;
         nextActivationTime = Time.time + newCooldown;
-        StopCoroutine(name);
+        StopCoroutine(equipName);
     }
 
     IEnumerator Boost()
     {
         active = true;
 
-        info = name + "\nBOOSTING";
+        info = equipName + "\nBOOSTING";
+        player.hud.defensive.text = player.defensive.info;
 
         turnOffTime = Time.time + boostDuration;
 
@@ -218,6 +239,6 @@ public class Equip : MonoBehaviour
 
         active = false;
         nextActivationTime = Time.time + cooldown;
-        StopCoroutine(name);
+        StopCoroutine(equipName);
     }
 }

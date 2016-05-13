@@ -4,14 +4,16 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour 
 {
-    Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive;
+    [HideInInspector]
+    public Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive;
+    [HideInInspector]
     public Image body, leftArm, rightArm, leftLeg, rightLeg;
     Player player;
 
 	// Use this for initialization
 	void Start () 
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = transform.parent.GetComponent<Player>();
 
         health = transform.FindChild("Health").GetComponent<Text>();
         rightHealth = transform.FindChild("RightArmHealth").GetComponent<Text>();
@@ -20,21 +22,19 @@ public class HUD : MonoBehaviour
         leftAmmo = transform.FindChild("LeftWeaponAmmo").GetComponent<Text>();
         offensive = transform.FindChild("Offensive").GetComponent<Text>();
         defensive = transform.FindChild("Defensive").GetComponent<Text>();
+
+        Transform mech = transform.FindChild("Mech");
+
+        body = mech.FindChild("Body").GetComponent<Image>();
+        leftArm = mech.FindChild("ArmLeft").GetComponent<Image>();
+        rightArm = mech.FindChild("ArmRight").GetComponent<Image>();
+        leftLeg = mech.FindChild("LegLeft").GetComponent<Image>();
+        rightLeg = mech.FindChild("LegRight").GetComponent<Image>();
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
-        // Não é preciso rescrever os valores a todos os updates, só é preciso alterar o texto quando os valores alteram
-        health.text = "Health\n" + player.currentHealth.ToString("0");
 
-        leftHealth.text = "Health: " + player.leftArm.currentHealth.ToString("0");
-        rightHealth.text = "Health: " + player.rightArm.currentHealth.ToString("0");
-
-        leftAmmo.text = "Ammo: " + player.leftArm.weapon.currentAmmo;
-        rightAmmo.text = "Ammo: " + player.rightArm.weapon.currentAmmo;
-
-        offensive.text = player.offensive.info;
-        defensive.text = player.defensive.info;
 	}
 }
