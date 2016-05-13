@@ -145,8 +145,8 @@ public class Player : MonoBehaviour
         }
         #endregion
 
-
-        
+        #region HealthUpdate 
+        // Não é preciso fazer isto no update, pode só ser feito quando se vai alterar o valor da vida
         if (currentHealth < maxHealth / 8)
         {
             ChangeHUDColor(dangerColor);
@@ -185,6 +185,7 @@ public class Player : MonoBehaviour
                 lightCoroutine = false;
             }
         }
+        #endregion
 
         //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
     }

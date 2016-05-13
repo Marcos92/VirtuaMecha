@@ -25,6 +25,7 @@ public class HUD : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
+        // Não é preciso rescrever os valores a todos os updates, só é preciso alterar o texto quando os valores alteram
         health.text = "Health\n" + player.currentHealth.ToString("0");
 
         leftHealth.text = "Health: " + player.leftArm.currentHealth.ToString("0");
