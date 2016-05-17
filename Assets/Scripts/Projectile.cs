@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
     public float lifetime;
     float timer;
     public bool explosive;
-    public float explosionRadius;
+    public float explosionRadius, explosionDamage;
 
     public LayerMask collisionMask;
 
@@ -39,15 +39,16 @@ public class Projectile : MonoBehaviour
 
     void OnHitObject(RaycastHit hit)
     {
-        //Debug.Log("Collision");
-
-        //hit.collider.
-        //dano
-
-        if(explosive)
+        if (hit.collider.gameObject.GetComponent<Damageable>() != null && hit.collider.gameObject.layer == 9) 
         {
-            Explosion();
+            Damageable damageable = hit.collider.gameObject.GetComponent<Damageable>();
+
+            if (damageable.type == Damageable.Type.Body) damageable.player.ChangeHealth(-damage);
+            else if (damageable.type == Damageable.Type.LeftArm) damageable.player.leftArm.ChangeHealth(-damage);
+            else damageable.player.rightArm.ChangeHealth(-damage);
         }
+
+        if(explosive) Explosion();
 
         Destroy(gameObject);
     }
@@ -68,13 +69,15 @@ public class Projectile : MonoBehaviour
 
         for (int i = 0; i < hitColliders.Length; i++)
         {
-            if (hitColliders[i].gameObject.tag == "Enemy")
+            if (hitColliders[i].gameObject.layer == 9)
             {
-                //dar dano
-                //explodir objectos destrutiveis
+                Damageable damageable = hitColliders[i].gameObject.GetComponent<Damageable>();
+                float dmg = explosionDamage / (Vector3.Distance(hitColliders[i].transform.position, transform.position)); 
+
+                if (damageable.type == Damageable.Type.Body) damageable.player.ChangeHealth(-dmg);
+                else if (damageable.type == Damageable.Type.LeftArm) damageable.player.leftArm.ChangeHealth(-dmg);
+                else damageable.player.rightArm.ChangeHealth(-dmg);
             }
         }
-
-        Destroy(gameObject);
     }
 }

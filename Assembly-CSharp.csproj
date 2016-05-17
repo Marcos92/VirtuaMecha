@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Arm.cs" />
+     <Compile Include="Assets\Scripts\Damageable.cs" />
      <Compile Include="Assets\Scripts\Equip.cs" />
      <Compile Include="Assets\Scripts\EquipMenu.cs" />
      <Compile Include="Assets\Scripts\HUD.cs" />

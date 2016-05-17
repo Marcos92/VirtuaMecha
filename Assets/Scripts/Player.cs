@@ -195,7 +195,7 @@ public class Player : MonoBehaviour
         currentHealth += value; //Add value to current life
 
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
-        else if (currentHealth <= 0) //DIE
+        else if (currentHealth <= 0) Destroy(gameObject);
 
         hud.health.text = "Health\n" + currentHealth.ToString("0"); //Write health to HUD
 
