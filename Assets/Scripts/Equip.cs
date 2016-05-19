@@ -27,7 +27,6 @@ public class Equip : MonoBehaviour
     [Header("Mine")]
     public Mine mine;
     public Transform mineSpawnPoint;
-    public string enemyTag;
 
     [Header("EMP")]
     public float effectRadius;
@@ -141,7 +140,6 @@ public class Equip : MonoBehaviour
         active = true;
 
         Mine m = Instantiate(mine, mineSpawnPoint.position, mineSpawnPoint.rotation) as Mine;
-        m.SetEnemyTag(enemyTag);
 
         active = false;
         nextActivationTime = Time.time + cooldown;

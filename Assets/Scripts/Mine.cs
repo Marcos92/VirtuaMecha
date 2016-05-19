@@ -4,9 +4,8 @@ using System.Collections;
 public class Mine : MonoBehaviour 
 {
     public float effectRadius;
-    public float damage;
+    public float explosionDamage;
     public float explosionRadius;
-    string enemyTag;
 
 	void Start () 
     {
@@ -37,18 +36,17 @@ public class Mine : MonoBehaviour
 
         for (int i = 0; i < hitColliders.Length; i++)
         {
-            if (hitColliders[i].gameObject.tag == enemyTag)
+            if (hitColliders[i].gameObject.layer == 9)
             {
-                //dar dano
-                //explodir objectos destrutiveis
+                Damageable damageable = hitColliders[i].gameObject.GetComponent<Damageable>();
+                float dmg = explosionDamage / (Vector3.Distance(hitColliders[i].transform.position, transform.position));
+
+                if (damageable.type == Damageable.Type.Body) damageable.player.ChangeHealth(-dmg);
+                else if (damageable.type == Damageable.Type.LeftArm) damageable.player.leftArm.ChangeHealth(-dmg);
+                else damageable.player.rightArm.ChangeHealth(-dmg);
             }
         }
 
         Destroy(gameObject);
-    }
-
-    public void SetEnemyTag(string _enemyTag)
-    {
-        enemyTag = _enemyTag;
     }
 }
