@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        hud = gameObject.transform.FindChild("HUD").transform.GetComponent<HUD>();
+
         //Associate arms to player
         leftArm = gameObject.transform.FindChild("LeftArm").transform.GetComponent<Arm>();
         rightArm = gameObject.transform.FindChild("RightArm").transform.GetComponent<Arm>();
@@ -56,7 +58,8 @@ public class Player : MonoBehaviour
 
         //Health
         ChangeHealth(maxHealth);
-        hud.health.text = "Health\n" + currentHealth.ToString("0"); //Write health to HUD
+        leftArm.ChangeHealth(leftArm.maxHealth);
+        rightArm.ChangeHealth(rightArm.maxHealth);
 	}
 	
 	// Update is called once per frame
@@ -75,13 +78,13 @@ public class Player : MonoBehaviour
             }
 
             //Left weapon
-            if (Input.GetButton("LeftWeapon") && leftArm.currentHealth > 0)
+            if (Input.GetButton("LeftWeapon") && leftArm.enabled)
             {
                 if (leftArm.currentHealth > 0) leftArm.weapon.Shoot();
             }
 
             //Right weapon
-            if (Input.GetButton("RightWeapon") && rightArm.currentHealth > 0)
+            if (Input.GetButton("RightWeapon") && rightArm.enabled)
             {
                 if (rightArm.currentHealth > 0) rightArm.weapon.Shoot();
             }
@@ -132,15 +135,15 @@ public class Player : MonoBehaviour
                 //Vertical aim
                 if (armRotationY > -maxArmRotationY && armRotationY < maxArmRotationY)
                 {
-                    if (leftArm.currentHealth > 0) leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
-                    if (rightArm.currentHealth > 0) rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+                    if (leftArm.enabled) leftArm.transform.RotateAround(leftAxisX.position, leftAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
+                    if (rightArm.enabled) rightArm.transform.RotateAround(rightAxisX.position, rightAxisX.right, Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed);
                 }
 
                 //Horizontal aim
                 if (armRotationX > -maxArmRotationX && armRotationX < maxArmRotationX)
                 {
-                    if (leftArm.currentHealth > 0) leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
-                    if (rightArm.currentHealth > 0) rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                    if (leftArm.enabled) leftArm.transform.RotateAround(leftAxisY.position, leftAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
+                    if (rightArm.enabled) rightArm.transform.RotateAround(rightAxisY.position, rightAxisY.transform.up, Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed);
                 }
             }
         }
@@ -197,7 +200,7 @@ public class Player : MonoBehaviour
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
         else if (currentHealth <= 0) Destroy(gameObject);
 
-        hud.health.text = "Health\n" + currentHealth.ToString("0"); //Write health to HUD
+        hud.health.text = currentHealth.ToString("0"); //Write health to HUD
 
         #region HealthUpdateHUD
         if (currentHealth < maxHealth / 8)

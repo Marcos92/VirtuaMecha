@@ -7,7 +7,7 @@ public class HUD : MonoBehaviour
     [HideInInspector]
     public Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive;
     [HideInInspector]
-    public Image body, leftArm, rightArm, leftLeg, rightLeg;
+    public Image body, leftArm, rightArm, leftLeg, rightLeg, healthBar, leftHealthBar, rightHealthBar, leftWeapon, rightWeapon;
     Player player;
 
 	// Use this for initialization
@@ -18,13 +18,20 @@ public class HUD : MonoBehaviour
         health = transform.FindChild("Health").GetComponent<Text>();
         rightHealth = transform.FindChild("RightArmHealth").GetComponent<Text>();
         leftHealth = transform.FindChild("LeftArmHealth").GetComponent<Text>();
-        rightAmmo = transform.FindChild("RightWeaponAmmo").GetComponent<Text>();
-        leftAmmo = transform.FindChild("LeftWeaponAmmo").GetComponent<Text>();
+        rightAmmo = transform.FindChild("RightWeapon").GetComponent<Text>();
+        leftAmmo = transform.FindChild("LeftWeapon").GetComponent<Text>();
         offensive = transform.FindChild("Offensive").GetComponent<Text>();
         defensive = transform.FindChild("Defensive").GetComponent<Text>();
 
-        Transform mech = transform.FindChild("Mech");
+        rightWeapon = transform.FindChild("RightWeapon").GetChild(0).GetComponent<Image>();
+        leftWeapon = transform.FindChild("LeftWeapon").GetChild(0).GetComponent<Image>();
 
+        healthBar = transform.FindChild("Health").GetChild(0).GetComponent<Image>();
+        rightHealthBar = transform.FindChild("RightArmHealth").GetChild(0).GetComponent<Image>();
+        leftHealthBar = transform.FindChild("LeftArmHealth").GetChild(0).GetComponent<Image>();
+
+        //Mech blueprint
+        Transform mech = transform.FindChild("Mech");
         body = mech.FindChild("Body").GetComponent<Image>();
         leftArm = mech.FindChild("ArmLeft").GetComponent<Image>();
         rightArm = mech.FindChild("ArmRight").GetComponent<Image>();

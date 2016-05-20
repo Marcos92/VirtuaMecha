@@ -8,15 +8,13 @@ public class Arm : MonoBehaviour
     public float maxHealth, currentHealth;
     public Player player;
     bool flip;
+    public bool enabled = true;
 
 	// Use this for initialization
 	void Start ()
     {
         //Associate player to arm
-        player = transform.parent.transform.GetComponent<Player>(); 
-
-        //Health
-        ChangeHealth(maxHealth);
+        player = transform.parent.transform.GetComponent<Player>();
 	}
 	
 	// Update is called once per frame
@@ -32,15 +30,35 @@ public class Arm : MonoBehaviour
         currentHealth += value; //Add value to current life
 
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
+        else if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            enabled = false;
+        }
+        else if (currentHealth > 0)
+        {
+            enabled = true;
+        }
 
-        if(gameObject.name.Contains("Left")) player.hud.leftHealth.text = "Health: " + currentHealth.ToString("0");
-        else player.hud.rightHealth.text = "Health: " + currentHealth.ToString("0");
+        if(gameObject.name.Contains("Left")) player.hud.leftHealth.text = currentHealth.ToString("0");
+        else player.hud.rightHealth.text = currentHealth.ToString("0");
 
-        if (currentHealth <= 0) ChangeHUDColor(new Color(0, 0, 0, 100));
+        if (currentHealth <= 0)
+        {
+            ChangeHUDColor(new Color(0, 0, 0, 100));
+            if (gameObject.name.Contains("Left")) player.hud.leftHealth.gameObject.SetActive(false);
+            else player.hud.rightHealth.gameObject.SetActive(false);
+        }
         else if (currentHealth < maxHealth / 8) ChangeHUDColor(player.dangerColor);
         else if (currentHealth >= maxHealth / 8 && currentHealth < maxHealth / 4) ChangeHUDColor(player.alertColor);
         else if (currentHealth >= maxHealth / 4 && currentHealth < maxHealth / 2) ChangeHUDColor(player.cautionColor);
         else if (currentHealth >= maxHealth / 2) ChangeHUDColor(player.normalColor);
+
+        if(currentHealth > 0)
+        {
+            if (gameObject.name.Contains("Left")) player.hud.leftHealth.gameObject.SetActive(true);
+            else player.hud.rightHealth.gameObject.SetActive(true);
+        }
     }
 
     public void EquipWeapon(Weapon newWeapon)
@@ -67,5 +85,10 @@ public class Arm : MonoBehaviour
     {
         if (gameObject.name.Contains("Left")) player.hud.leftArm.color = newColor;
         else player.hud.rightArm.color = newColor;
+    }
+
+    void DisableArmHUD()
+    {
+
     }
 }

@@ -25,8 +25,8 @@ public class Weapon : MonoBehaviour
 	void Start ()
     {
         currentAmmo = maxAmmo;
-        if (transform.parent.name.Contains("Left")) transform.parent.GetComponent<Arm>().player.hud.leftAmmo.text = "Ammo: " + currentAmmo;
-        else transform.parent.GetComponent<Arm>().player.hud.rightAmmo.text = "Ammo: " + currentAmmo;
+        if (transform.parent.gameObject.name.Contains("Left")) transform.parent.GetComponent<Arm>().player.hud.leftAmmo.text = currentAmmo + "/" + maxAmmo;
+        else transform.parent.GetComponent<Arm>().player.hud.rightAmmo.text = currentAmmo + "/" + maxAmmo;
 
         nextShotTime = Time.time;
     }
@@ -46,8 +46,8 @@ public class Weapon : MonoBehaviour
 
             currentAmmo--;
 
-            if (transform.parent.gameObject.name.Contains("Left")) transform.parent.GetComponent<Arm>().player.hud.leftAmmo.text = "Ammo: " + currentAmmo;
-            else transform.parent.GetComponent<Arm>().player.hud.rightAmmo.text = "Ammo: " + currentAmmo;
+            if (transform.parent.gameObject.name.Contains("Left")) transform.parent.GetComponent<Arm>().player.hud.leftAmmo.text = currentAmmo + "/" + maxAmmo;
+            else transform.parent.GetComponent<Arm>().player.hud.rightAmmo.text = currentAmmo + "/" + maxAmmo;
 
             for(int i = 0; i < projectilesPerShot; i++)
             {
