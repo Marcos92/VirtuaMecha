@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
     public Color dangerColor;
     public HUD hud;
 
+    [Header("HUD")]
+    public float shakeFactor = 0.1f;
+    public float maxShakeDuration = 1f;
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -140,8 +144,8 @@ public class Player : MonoBehaviour
         }
         #endregion
 
-        if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
-        //if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
+        //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
+        if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
         //if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
     }
 
@@ -192,7 +196,11 @@ public class Player : MonoBehaviour
 
     public void ChangeHealth(float value)
     {
-        if (value < 0 && immune) return; //Life does not decrease while immune
+        if (value < 0)
+        {
+            StartCoroutine("Shake", value);
+            if (immune) return; //Life does not decrease while immune
+        }
 
         currentHealth += value; //Add value to current life
 
@@ -237,6 +245,24 @@ public class Player : MonoBehaviour
 
         Vector3 hb = hud.healthBar.transform.localScale;
         hud.healthBar.transform.localScale = new Vector3(currentHealth * 10 / maxHealth, hb.y, hb.z);
+    }
+
+    IEnumerable Shake(float damage)
+    {
+        yield return null;
+
+        damage = Mathf.Abs(damage);
+        float shakeIntensity = Mathf.Log(damage + 1) * shakeFactor;
+        float shakeDuration = shakeIntensity * maxShakeDuration / (Mathf.Log(maxHealth + 1) * shakeFactor);
+        float shakeStop = Time.time + shakeDuration;
+
+        while(Time.time < shakeStop)
+        {
+            transform.transform.FindChild("Cockpit").transform.localPosition = new Vector3(Random.Range(-shakeIntensity, shakeIntensity), Random.Range(-shakeIntensity, shakeIntensity), Random.Range(-shakeIntensity, shakeIntensity));
+            //yield return null;
+        }
+
+        transform.FindChild("Cockpit").transform.localPosition = Vector3.zero;
     }
 
     public void EquipEquipment(Equip newEquipment)
