@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public Equip offensive, defensive;
     public float maxHealth, currentHealth;
     //[HideInInspector]
-    public bool immune, canMove = true, canRotate = true;
+    public bool immune, canMove = true, canRotate = true, canShoot = true;
     public bool controlable = true;
 
     [Header("Lights")]
@@ -77,46 +77,37 @@ public class Player : MonoBehaviour
                 else transform.Rotate(0, Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * rotationSpeed, 0);
             }
 
-            //Left weapon
-            if (Input.GetButton("LeftWeapon") && leftArm.enabled)
+            if(canShoot)
             {
-                if (leftArm.currentHealth > 0) leftArm.weapon.Shoot();
-            }
+                //Left weapon
+                if (Input.GetButton("LeftWeapon") && leftArm.enabled) leftArm.weapon.Shoot();
 
-            //Right weapon
-            if (Input.GetButton("RightWeapon") && rightArm.enabled)
-            {
-                if (rightArm.currentHealth > 0) rightArm.weapon.Shoot();
-            }
+                //Right weapon
+                if (Input.GetButton("RightWeapon") && rightArm.enabled) rightArm.weapon.Shoot();
 
-            //Offensive equipment
-            if (Input.GetAxis("Offensive") > 0 || Input.GetButton("Offensive"))
-            {
-                offensive.Activate();
-            }
+                //Offensive equipment
+                if (Input.GetAxis("Offensive") > 0 || Input.GetButton("Offensive")) offensive.Activate();
 
-            //Defensive equipment
-            if (Input.GetAxis("Defensive") > 0 || Input.GetButton("Defensive"))
-            {
-                defensive.Activate();
+                //Defensive equipment
+                if (Input.GetAxis("Defensive") > 0 || Input.GetButton("Defensive")) defensive.Activate();
             }
 
             //Melee
-            if (Input.GetButton("MeleeLeft") && Input.GetButton("MeleeRight"))
-            {
-                Debug.Log("Special punch!");
-                //Do SpecialMelee action
-            }
-            else if (Input.GetButton("MeleeLeft"))
-            {
-                Debug.Log("Left punch!");
-                //Do LeftPunch action
-            }
-            else if (Input.GetButton("MeleeRight"))
-            {
-                Debug.Log("Right punch!");
-                //Do RightPunch action
-            }
+            //if (Input.GetButton("MeleeLeft") && Input.GetButton("MeleeRight"))
+            //{
+            //    Debug.Log("Special punch!");
+            //    //Do SpecialMelee action
+            //}
+            //else if (Input.GetButton("MeleeLeft"))
+            //{
+            //    Debug.Log("Left punch!");
+            //    //Do LeftPunch action
+            //}
+            //else if (Input.GetButton("MeleeRight"))
+            //{
+            //    Debug.Log("Right punch!");
+            //    //Do RightPunch action
+            //}
 
             //Strafe
             if (Input.GetButtonDown("Strafe")) strafe = !strafe;
@@ -149,9 +140,9 @@ public class Player : MonoBehaviour
         }
         #endregion
 
-        //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
+        if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
         //if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
-        if (Input.GetKeyDown(KeyCode.Space)) leftArm.ChangeHealth(-5);
+        //if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
     }
 
     public void ToggleMovement()
@@ -164,10 +155,16 @@ public class Player : MonoBehaviour
         canRotate = !canRotate;
     }
 
+    public void ToggleShooting()
+    {
+        canShoot = !canShoot;
+    }
+
     IEnumerator EMPEffect(float time)
     {
         ToggleMovement();
         ToggleRotation();
+        ToggleShooting();
         cockpitLights.SetActive(false);
         hud.gameObject.SetActive(false);
         yield return new WaitForSeconds(time);
@@ -175,12 +172,14 @@ public class Player : MonoBehaviour
         hud.gameObject.SetActive(true);
         ToggleRotation();
         ToggleMovement();
+        ToggleShooting();
         StopCoroutine("EMPEffect");
     }
 
     public void ToggleShield(bool on)
     {
         immune = !immune;
+
         if (immune)
         {
             //draw shield 
@@ -216,32 +215,28 @@ public class Player : MonoBehaviour
         else if (currentHealth >= maxHealth / 8 && currentHealth < maxHealth / 4)
         {
             ChangeHUDColor(alertColor);
-            if (lightCoroutine)
-            {
-                StopCoroutine("ChangeLightIntensity");
-                lightCoroutine = false;
-            }
+            ChangeLightColor(normalLights);
+            StopCoroutine("ChangeLightIntensity");
+            lightCoroutine = false;
         }
         else if (currentHealth >= maxHealth / 4 && currentHealth < maxHealth / 2)
         {
             ChangeHUDColor(cautionColor);
-            if (lightCoroutine)
-            {
-                StopCoroutine("ChangeLightIntensity");
-                lightCoroutine = false;
-            }
+            ChangeLightColor(normalLights);
+            StopCoroutine("ChangeLightIntensity");
+            lightCoroutine = false;
         }
         else if (currentHealth >= maxHealth / 2)
         {
             ChangeHUDColor(normalColor);
             ChangeLightColor(normalLights);
-            if (lightCoroutine)
-            {
-                StopCoroutine("ChangeLightIntensity");
-                lightCoroutine = false;
-            }
+            StopCoroutine("ChangeLightIntensity");
+            lightCoroutine = false;
         }
         #endregion
+
+        Vector3 hb = hud.healthBar.transform.localScale;
+        hud.healthBar.transform.localScale = new Vector3(currentHealth * 10 / maxHealth, hb.y, hb.z);
     }
 
     public void EquipEquipment(Equip newEquipment)
@@ -252,8 +247,16 @@ public class Player : MonoBehaviour
         Equip e = Instantiate(newEquipment, transform.position, transform.rotation) as Equip;
         e.transform.SetParent(transform);
 
-        if (newEquipment.type == Equip.Type.Offensive) offensive = e;
-        else defensive = e;
+        if (newEquipment.type == Equip.Type.Offensive)
+        {
+            offensive = e;
+            hud.offImage.sprite = e.icon;
+        }
+        else
+        {
+            defensive = e;
+            hud.defImage.sprite = e.icon;
+        }
     }
 
     void ChangeLightColor(Color newColor)

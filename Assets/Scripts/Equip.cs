@@ -54,7 +54,7 @@ public class Equip : MonoBehaviour
         //Associate player to equip
         player = transform.parent.GetComponent<Player>();
 
-        info = equipName + "\nREADY";
+        info = "READY";
 
         if(type == Type.Offensive) player.hud.offensive.text = player.offensive.info;
         else player.hud.defensive.text = player.defensive.info;
@@ -64,13 +64,13 @@ public class Equip : MonoBehaviour
     {
         if (Time.time < nextActivationTime)
         {
-            info = equipName + "\nCOOLDOWN: " + (nextActivationTime - Time.time).ToString("0") + "s";
+            info = "COOLDOWN: " + (nextActivationTime - Time.time).ToString("0") + "s";
             if (type == Type.Offensive) player.hud.offensive.text = player.offensive.info;
             else player.hud.defensive.text = player.defensive.info;
         }
         else if (!active)
         {
-            info = equipName + "\nREADY";
+            info = "READY";
             if (type == Type.Offensive) player.hud.offensive.text = player.offensive.info;
             else player.hud.defensive.text = player.defensive.info;
         }
@@ -109,7 +109,7 @@ public class Equip : MonoBehaviour
 
             if (target != null && Time.time > nextShotTime)
             {
-                info = equipName + "\nSHOOTING";
+                info = "SHOOTING";
                 player.hud.offensive.text = player.offensive.info;
 
                 //Point to target
@@ -122,7 +122,7 @@ public class Equip : MonoBehaviour
             }
             else if (target == null)
             {
-                info = equipName + "\nNO TARGET";
+                info = "NO TARGET";
                 player.hud.offensive.text = player.offensive.info;
             }
 
@@ -169,7 +169,7 @@ public class Equip : MonoBehaviour
     IEnumerator Shield()
     {
         active = true;
-        info = equipName + "\nSHIELDS UP";
+        info = "SHIELDS UP";
         player.hud.defensive.text = player.defensive.info;
 
         player.ToggleShield(true);
@@ -192,13 +192,14 @@ public class Equip : MonoBehaviour
 
         active = true;
 
-        info = equipName + "\nREPAIRING";
+        info = "REPAIRING";
         player.hud.defensive.text = player.defensive.info;
 
         turnOffTime = Time.time + repairDuration;
 
         player.ToggleMovement();
         player.ToggleRotation();
+        player.ToggleShooting();
 
         while (Time.time < turnOffTime && (player.currentHealth < player.maxHealth || player.leftArm.currentHealth < player.leftArm.maxHealth || player.rightArm.currentHealth < player.rightArm.maxHealth))
         {
@@ -210,6 +211,7 @@ public class Equip : MonoBehaviour
 
         player.ToggleMovement();
         player.ToggleRotation();
+        player.ToggleShooting();
 
         active = false;
         nextActivationTime = Time.time + newCooldown;
@@ -220,7 +222,7 @@ public class Equip : MonoBehaviour
     {
         active = true;
 
-        info = equipName + "\nBOOSTING";
+        info = "BOOSTING";
         player.hud.defensive.text = player.defensive.info;
 
         turnOffTime = Time.time + boostDuration;

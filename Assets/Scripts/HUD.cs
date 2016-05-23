@@ -7,7 +7,7 @@ public class HUD : MonoBehaviour
     [HideInInspector]
     public Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive;
     [HideInInspector]
-    public Image body, leftArm, rightArm, leftLeg, rightLeg, healthBar, leftHealthBar, rightHealthBar, leftWeapon, rightWeapon;
+    public Image body, leftArm, rightArm, leftLeg, rightLeg, healthBar, leftHealthBar, rightHealthBar, leftWeapon, rightWeapon, offImage, defImage;
     Player player;
 
 	// Use this for initialization
@@ -25,6 +25,9 @@ public class HUD : MonoBehaviour
 
         rightWeapon = transform.FindChild("RightWeapon").GetChild(0).GetComponent<Image>();
         leftWeapon = transform.FindChild("LeftWeapon").GetChild(0).GetComponent<Image>();
+
+        offImage = transform.FindChild("Offensive").GetChild(0).GetComponent<Image>();
+        defImage = transform.FindChild("Defensive").GetChild(0).GetComponent<Image>();
 
         healthBar = transform.FindChild("Health").GetChild(0).GetComponent<Image>();
         rightHealthBar = transform.FindChild("RightArmHealth").GetChild(0).GetComponent<Image>();

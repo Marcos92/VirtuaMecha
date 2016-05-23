@@ -9,15 +9,13 @@ public class Arm : MonoBehaviour
     public Player player;
     bool flip;
     public bool enabled = true;
-
-	// Use this for initialization
+    
 	void Start ()
     {
         //Associate player to arm
         player = transform.parent.transform.GetComponent<Player>();
 	}
 	
-	// Update is called once per frame
 	void Update ()
     {
 	
@@ -46,8 +44,16 @@ public class Arm : MonoBehaviour
         if (currentHealth <= 0)
         {
             ChangeHUDColor(new Color(0, 0, 0, 100));
-            if (gameObject.name.Contains("Left")) player.hud.leftHealth.gameObject.SetActive(false);
-            else player.hud.rightHealth.gameObject.SetActive(false);
+            if (gameObject.name.Contains("Left"))
+            {
+                player.hud.leftHealth.gameObject.SetActive(false);
+                player.hud.leftAmmo.gameObject.SetActive(false);
+            }
+            else
+            {
+                player.hud.rightHealth.gameObject.SetActive(false);
+                player.hud.rightAmmo.gameObject.SetActive(false);
+            }
         }
         else if (currentHealth < maxHealth / 8) ChangeHUDColor(player.dangerColor);
         else if (currentHealth >= maxHealth / 8 && currentHealth < maxHealth / 4) ChangeHUDColor(player.alertColor);
@@ -56,8 +62,27 @@ public class Arm : MonoBehaviour
 
         if(currentHealth > 0)
         {
-            if (gameObject.name.Contains("Left")) player.hud.leftHealth.gameObject.SetActive(true);
-            else player.hud.rightHealth.gameObject.SetActive(true);
+            if (gameObject.name.Contains("Left"))
+            {
+                player.hud.leftHealth.gameObject.SetActive(true);
+                player.hud.leftAmmo.gameObject.SetActive(true);
+            }
+            else
+            {
+                player.hud.rightHealth.gameObject.SetActive(true);
+                player.hud.rightAmmo.gameObject.SetActive(true);
+            }
+        }
+
+        if (gameObject.name.Contains("Left"))
+        {
+            Vector3 hb = player.hud.leftHealthBar.transform.localScale;
+            player.hud.leftHealthBar.transform.localScale = new Vector3(currentHealth * 10 / maxHealth, hb.y, hb.z);
+        }
+        else
+        {
+            Vector3 hb = player.hud.rightHealthBar.transform.localScale;
+            player.hud.rightHealthBar.transform.localScale = new Vector3(currentHealth * 10 / maxHealth, hb.y, hb.z);
         }
     }
 
@@ -77,6 +102,9 @@ public class Arm : MonoBehaviour
             Vector3 v = w.transform.localScale;
             w.transform.localScale = new Vector3(-v.x, v.y, v.z);
         }
+
+        if (flip) player.hud.leftWeapon.sprite = w.icon;
+        else player.hud.rightWeapon.sprite = w.icon;
 
         weapon = w;
     }
