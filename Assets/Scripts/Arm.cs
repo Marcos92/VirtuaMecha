@@ -28,13 +28,16 @@ public class Arm : MonoBehaviour
         currentHealth += value; //Add value to current life
 
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
-        else if (currentHealth <= 0)
+        else if (currentHealth <= 0) //Check if is disabled
         {
             currentHealth = 0;
             enabled = false;
         }
-        else if (currentHealth > 0)
+        else if (currentHealth > 0 && !enabled) //Check if it got healed if disabled
         {
+            if (gameObject.name.Contains("Left")) transform.localRotation = player.rightArm.transform.localRotation;
+            else transform.localRotation = player.leftArm.transform.localRotation;
+
             enabled = true;
         }
 

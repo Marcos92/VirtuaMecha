@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
 
         //Arm rotation
         maxArmRotationX = 30;
-        maxArmRotationY = 60;
+        maxArmRotationY = 45;
         armRotationX = 0;
         armRotationY = 0;
 
@@ -145,8 +145,8 @@ public class Player : MonoBehaviour
         #endregion
 
         //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
-        if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
-        //if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
+        //if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
+        if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
     }
 
     public void ToggleMovement()
