@@ -23,7 +23,11 @@ public class Arm : MonoBehaviour
 
     public void ChangeHealth(float value)
     {
-        if (value < 0 && player.immune) return; //Life does not decrease while immune
+        if (value < 0)
+        {
+            player.StartCoroutine("Shake", value * 0.5f); //Less intense when it hits arm
+            if (player.immune) return; //Life does not decrease while immune
+        }
 
         currentHealth += value; //Add value to current life
 

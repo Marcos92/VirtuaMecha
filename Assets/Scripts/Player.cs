@@ -145,8 +145,8 @@ public class Player : MonoBehaviour
         #endregion
 
         //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
-        //if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
-        if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
+        if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-450);
+        //if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
     }
 
     public void ToggleMovement()
@@ -247,9 +247,9 @@ public class Player : MonoBehaviour
         hud.healthBar.transform.localScale = new Vector3(currentHealth * 10 / maxHealth, hb.y, hb.z);
     }
 
-    IEnumerable Shake(float damage)
+    public IEnumerator Shake(float damage)
     {
-        yield return null;
+        Debug.Log("Shake");
 
         damage = Mathf.Abs(damage);
         float shakeIntensity = Mathf.Log(damage + 1) * shakeFactor;
@@ -259,7 +259,7 @@ public class Player : MonoBehaviour
         while(Time.time < shakeStop)
         {
             transform.transform.FindChild("Cockpit").transform.localPosition = new Vector3(Random.Range(-shakeIntensity, shakeIntensity), Random.Range(-shakeIntensity, shakeIntensity), Random.Range(-shakeIntensity, shakeIntensity));
-            //yield return null;
+            yield return null;
         }
 
         transform.FindChild("Cockpit").transform.localPosition = Vector3.zero;
