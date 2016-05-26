@@ -28,9 +28,12 @@ public class Player : MonoBehaviour
     public Color dangerColor;
     public HUD hud;
 
-    [Header("HUD")]
+    [Header("Damage")]
     public float shakeFactor = 0.1f;
     public float maxShakeDuration = 1f;
+    public ParticleSystem leftSparks;
+    public ParticleSystem rightSparks;
+    public ParticleSystem smoke;
 
     void Awake()
     {
@@ -40,6 +43,7 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        //HUD
         hud = gameObject.transform.FindChild("HUD").transform.GetComponent<HUD>();
 
         //Associate arms to player
@@ -145,7 +149,7 @@ public class Player : MonoBehaviour
         #endregion
 
         //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
-        if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-450);
+        if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
         //if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
     }
 
@@ -208,9 +212,8 @@ public class Player : MonoBehaviour
         else if (currentHealth <= 0) Destroy(gameObject);
 
         hud.health.text = currentHealth.ToString("0"); //Write health to HUD
-
-        #region HealthUpdateHUD
-        if (currentHealth < maxHealth / 8)
+        
+        if (currentHealth < maxHealth / 8) //Red
         {
             ChangeHUDColor(dangerColor);
             ChangeLightColor(dangerLights);
@@ -219,29 +222,44 @@ public class Player : MonoBehaviour
                 StartCoroutine("ChangeLightIntensity");
                 lightCoroutine = true;
             }
+
+            if (!leftSparks.isPlaying) leftSparks.Play();
+            if (!rightSparks.isPlaying) rightSparks.Play();
+            if (!smoke.isPlaying) smoke.Play();
         }
-        else if (currentHealth >= maxHealth / 8 && currentHealth < maxHealth / 4)
+        else if (currentHealth >= maxHealth / 8 && currentHealth < maxHealth / 4) //Orange
         {
             ChangeHUDColor(alertColor);
             ChangeLightColor(normalLights);
             StopCoroutine("ChangeLightIntensity");
             lightCoroutine = false;
+
+            if (!leftSparks.isPlaying) leftSparks.Play();
+            if (!rightSparks.isPlaying) rightSparks.Play();
+            if (smoke.isPlaying) smoke.Stop();
         }
-        else if (currentHealth >= maxHealth / 4 && currentHealth < maxHealth / 2)
+        else if (currentHealth >= maxHealth / 4 && currentHealth < maxHealth / 2) //Yellow
         {
             ChangeHUDColor(cautionColor);
             ChangeLightColor(normalLights);
             StopCoroutine("ChangeLightIntensity");
             lightCoroutine = false;
+
+            if (!leftSparks.isPlaying) leftSparks.Play();
+            if (rightSparks.isPlaying) rightSparks.Stop();
+            if (smoke.isPlaying) smoke.Stop();
         }
-        else if (currentHealth >= maxHealth / 2)
+        else if (currentHealth >= maxHealth / 2) //Normal
         {
             ChangeHUDColor(normalColor);
             ChangeLightColor(normalLights);
             StopCoroutine("ChangeLightIntensity");
             lightCoroutine = false;
+
+            if (leftSparks.isPlaying) leftSparks.Stop();
+            if (rightSparks.isPlaying) rightSparks.Stop();
+            if (smoke.isPlaying) smoke.Stop();
         }
-        #endregion
 
         Vector3 hb = hud.healthBar.transform.localScale;
         hud.healthBar.transform.localScale = new Vector3(currentHealth * 10 / maxHealth, hb.y, hb.z);

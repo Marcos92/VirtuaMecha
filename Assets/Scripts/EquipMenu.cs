@@ -124,7 +124,8 @@ public class EquipMenu : MonoBehaviour
 
     public void Confirm()
     {
-        loadingScreen.SetActive(true);
+        //loadingScreen.SetActive(true);
+        //DontDestroyOnLoad(loadingScreen.transform.parent);
 
         player.controlable = true;
         player.transform.Find("Body").gameObject.SetActive(false);
