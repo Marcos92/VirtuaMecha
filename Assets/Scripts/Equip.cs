@@ -14,6 +14,7 @@ public class Equip : MonoBehaviour
     public string description;
     bool active = false;
     public Sprite icon;
+    AudioSource audioSource;
 
     [Header("Turret")]
     public float turretDuration;
@@ -58,6 +59,8 @@ public class Equip : MonoBehaviour
 
         if(type == Type.Offensive) player.hud.offensive.text = player.offensive.info;
         else player.hud.defensive.text = player.defensive.info;
+
+        audioSource = GetComponent<AudioSource>();
 	}
 	
 	void Update () 
@@ -79,7 +82,8 @@ public class Equip : MonoBehaviour
     public void Activate()
     {
         if(Time.time > nextActivationTime && !active)
-        { 
+        {
+            audioSource.Play();
             StartCoroutine(equipName);
         }
     }

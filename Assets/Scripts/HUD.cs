@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class HUD : MonoBehaviour 
 {
     [HideInInspector]
-    public Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive;
+    public Text health, leftAmmo, rightAmmo, leftHealth, rightHealth, offensive, defensive, strafe;
     [HideInInspector]
     public Image body, leftArm, rightArm, leftLeg, rightLeg, healthBar, leftHealthBar, rightHealthBar, leftWeapon, rightWeapon, offImage, defImage;
     Player player;
@@ -22,6 +22,7 @@ public class HUD : MonoBehaviour
         leftAmmo = transform.FindChild("LeftWeapon").GetComponent<Text>();
         offensive = transform.FindChild("Offensive").GetComponent<Text>();
         defensive = transform.FindChild("Defensive").GetComponent<Text>();
+        strafe = transform.FindChild("Strafing").GetComponent<Text>();
 
         rightWeapon = transform.FindChild("RightWeapon").GetChild(0).GetComponent<Image>();
         leftWeapon = transform.FindChild("LeftWeapon").GetChild(0).GetComponent<Image>();

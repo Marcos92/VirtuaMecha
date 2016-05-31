@@ -35,6 +35,11 @@ public class Player : MonoBehaviour
     public ParticleSystem rightSparks;
     public ParticleSystem smoke;
 
+    [Header("Audio")]
+    public AudioSource audioWalk;
+    public AudioSource audioHit;
+    public AudioSource audioArms;
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -83,6 +88,10 @@ public class Player : MonoBehaviour
                 transform.Translate(Vector3.forward * Input.GetAxisRaw("VerticalLeft") * Time.deltaTime * movementSpeed);
                 if (strafe) transform.Translate(Vector3.right * Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * strafeSpeed);
                 else transform.Rotate(0, Input.GetAxisRaw("HorizontalLeft") * Time.deltaTime * rotationSpeed, 0);
+
+                //Audio
+                if ((Input.GetAxisRaw("VerticalLeft") != 0 || Input.GetAxisRaw("HorizontalLeft") != 0) && !audioWalk.isPlaying) audioWalk.Play();
+                else if (Input.GetAxisRaw("VerticalLeft") == 0 && Input.GetAxisRaw("HorizontalLeft") == 0) audioWalk.Stop();
             }
 
             if(canShoot)
@@ -118,7 +127,11 @@ public class Player : MonoBehaviour
             //}
 
             //Strafe
-            if (Input.GetButtonDown("Strafe")) strafe = !strafe;
+            if (Input.GetButtonDown("Strafe"))
+            {
+                strafe = !strafe;
+                hud.strafe.gameObject.SetActive(strafe);
+            }
 
             //Aim
             //Limit rotation
@@ -130,6 +143,10 @@ public class Player : MonoBehaviour
             {
                 armRotationX += Input.GetAxis("HorizontalRight") * Time.deltaTime * armRotationSpeed;
                 armRotationY += Input.GetAxis("VerticalRight") * Time.deltaTime * armRotationSpeed;
+
+                //Audio
+                if ((Input.GetAxisRaw("VerticalRight") != 0 || Input.GetAxisRaw("HorizontalRight") != 0) && !audioArms.isPlaying) audioArms.Play();
+                else if (Input.GetAxisRaw("VerticalRight") == 0 && Input.GetAxisRaw("HorizontalRight") == 0) audioArms.Stop();
 
                 //Vertical aim
                 if (armRotationY > -maxArmRotationY && armRotationY < maxArmRotationY)
@@ -267,8 +284,6 @@ public class Player : MonoBehaviour
 
     public IEnumerator Shake(float damage)
     {
-        Debug.Log("Shake");
-
         damage = Mathf.Abs(damage);
         float shakeIntensity = Mathf.Log(damage + 1) * shakeFactor;
         float shakeDuration = shakeIntensity * maxShakeDuration / (Mathf.Log(maxHealth + 1) * shakeFactor);

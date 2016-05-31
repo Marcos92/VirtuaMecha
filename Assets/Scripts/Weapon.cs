@@ -21,6 +21,9 @@ public class Weapon : MonoBehaviour
     public string description;
     public Sprite icon;
 
+    AudioSource audioSource;
+    public AudioClip shotSound, emptySound;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -29,6 +32,8 @@ public class Weapon : MonoBehaviour
         else transform.parent.GetComponent<Arm>().player.hud.rightAmmo.text = currentAmmo + "/" + maxAmmo;
 
         nextShotTime = Time.time;
+
+        audioSource = GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
@@ -40,25 +45,31 @@ public class Weapon : MonoBehaviour
 
     public void Shoot()
     {
-        if(Time.time > nextShotTime && currentAmmo > 0)
+        if(Time.time > nextShotTime)
         {
             nextShotTime = Time.time + timeBetweenShots/1000f;
+            if (currentAmmo > 0) audioSource.clip = shotSound;
+            else audioSource.clip = emptySound;
+            audioSource.PlayOneShot(audioSource.clip);
 
-            currentAmmo--;
-
-            if (transform.parent.gameObject.name.Contains("Left")) transform.parent.GetComponent<Arm>().player.hud.leftAmmo.text = currentAmmo + "/" + maxAmmo;
-            else transform.parent.GetComponent<Arm>().player.hud.rightAmmo.text = currentAmmo + "/" + maxAmmo;
-
-            for(int i = 0; i < projectilesPerShot; i++)
+            if(currentAmmo > 0)
             {
-                Vector3 rotation = muzzle.rotation.eulerAngles;
-                float rx = Random.Range(-coneAngle, coneAngle);
-                float ry = Random.Range(-coneAngle, coneAngle);
-                rotation = rotation + new Vector3(rx, ry, 0);
-                float v = Random.Range(projectileSpeed * (1 - projectileSpeedVariation), projectileSpeed);
+                currentAmmo--;
 
-                Projectile p = Instantiate(projectile, muzzle.position, Quaternion.Euler(rotation)) as Projectile;
-                p.SetSpeed(v);
+                if (transform.parent.gameObject.name.Contains("Left")) transform.parent.GetComponent<Arm>().player.hud.leftAmmo.text = currentAmmo + "/" + maxAmmo;
+                else transform.parent.GetComponent<Arm>().player.hud.rightAmmo.text = currentAmmo + "/" + maxAmmo;
+
+                for (int i = 0; i < projectilesPerShot; i++)
+                {
+                    Vector3 rotation = muzzle.rotation.eulerAngles;
+                    float rx = Random.Range(-coneAngle, coneAngle);
+                    float ry = Random.Range(-coneAngle, coneAngle);
+                    rotation = rotation + new Vector3(rx, ry, 0);
+                    float v = Random.Range(projectileSpeed * (1 - projectileSpeedVariation), projectileSpeed);
+
+                    Projectile p = Instantiate(projectile, muzzle.position, Quaternion.Euler(rotation)) as Projectile;
+                    p.SetSpeed(v);
+                }
             }
         }
     }
