@@ -56,12 +56,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -88,7 +82,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Lobby\Scripts\DraggablePanel.cs" />
+    <Compile Include="Assets\Lobby\Scripts\EventSystemChecker.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyCountdownPanel.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyHook.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyInfoPanel.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyMainMenu.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyManager.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyPlayer.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyPlayerList.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyServerEntry.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyServerList.cs" />
+    <Compile Include="Assets\Lobby\Scripts\Lobby\LobbyTopPanel.cs" />
+    <Compile Include="Assets\Lobby\Scripts\NetworkLobbyHook.cs" />
     <Compile Include="Assets\Scripts\Arm.cs" />
+    <Compile Include="Assets\Scripts\ControllerManager.cs" />
     <Compile Include="Assets\Scripts\Damageable.cs" />
     <Compile Include="Assets\Scripts\Equip.cs" />
     <Compile Include="Assets\Scripts\EquipMenu.cs" />
@@ -99,6 +107,9 @@
     <Compile Include="Assets\Scripts\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Fonts\OpenSans\License!.txt" />
+    <None Include="Assets\Lobby\Documentation.txt" />
+    <None Include="Assets\Lobby\Instruction.txt" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
