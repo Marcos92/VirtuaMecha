@@ -201,18 +201,10 @@ public class Player : MonoBehaviour
         StopCoroutine("EMPEffect");
     }
 
-    public void ToggleShield(bool on)
+    public void ToggleShield()
     {
         immune = !immune;
-
-        if (immune)
-        {
-            //draw shield 
-        }
-        else
-        {
-            //hide shield
-        }
+        transform.FindChild("Shield").gameObject.SetActive(immune);
     }
 
     public void ChangeHealth(float value)

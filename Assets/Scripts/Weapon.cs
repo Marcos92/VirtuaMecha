@@ -16,6 +16,7 @@ public class Weapon : MonoBehaviour
     public float projectileSpeedVariation = 0.5f;
 
     public Transform muzzle;
+    public ParticleSystem muzzleFlash;
     public Projectile projectile;
 
     public string description;
@@ -70,6 +71,8 @@ public class Weapon : MonoBehaviour
                     Projectile p = Instantiate(projectile, muzzle.position, Quaternion.Euler(rotation)) as Projectile;
                     p.SetSpeed(v);
                 }
+
+                muzzleFlash.Play();
             }
         }
     }

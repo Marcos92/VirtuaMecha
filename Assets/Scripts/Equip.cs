@@ -155,6 +155,8 @@ public class Equip : MonoBehaviour
         yield return null;
         active = true;
 
+        transform.FindChild("Particles").GetComponent<ParticleSystem>().Play();
+
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, effectRadius);
 
         for (int i = 0; i < hitColliders.Length; i++)
@@ -176,9 +178,9 @@ public class Equip : MonoBehaviour
         info = "SHIELDS UP";
         player.hud.defensive.text = player.defensive.info;
 
-        player.ToggleShield(true);
+        player.ToggleShield();
         yield return new WaitForSeconds(shieldDuration);
-        player.ToggleShield(false);
+        player.ToggleShield();
 
         active = false;
         nextActivationTime = Time.time + cooldown;
