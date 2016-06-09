@@ -25,6 +25,8 @@ public class Weapon : MonoBehaviour
     AudioSource audioSource;
     public AudioClip shotSound, emptySound;
 
+    private ServerSpawner serverSpawner;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -35,6 +37,8 @@ public class Weapon : MonoBehaviour
         nextShotTime = Time.time;
 
         audioSource = GetComponent<AudioSource>();
+
+        serverSpawner = GetComponent<ServerSpawner>();
     }
 	
 	// Update is called once per frame
@@ -70,6 +74,7 @@ public class Weapon : MonoBehaviour
 
                     Projectile p = Instantiate(projectile, muzzle.position, Quaternion.Euler(rotation)) as Projectile;
                     p.SetSpeed(v);
+                    serverSpawner.CmdFire(p.gameObject);
                 }
 
                 muzzleFlash.Play();

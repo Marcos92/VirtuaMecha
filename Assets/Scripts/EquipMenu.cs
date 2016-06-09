@@ -129,14 +129,15 @@ public class EquipMenu : MonoBehaviour
         //loadingScreen.SetActive(true);
         //DontDestroyOnLoad(loadingScreen.transform.parent);
 
-        player.controlable = true;
-        player.transform.Find("Body").gameObject.SetActive(false);
-        player.transform.Find("Cockpit").gameObject.SetActive(true);
-        player.transform.Find("Camera").gameObject.SetActive(true);
-        player.transform.position = Vector3.zero;
+        //player.controlable = true;
+        //player.transform.Find("Body").gameObject.SetActive(false);
+        //player.transform.Find("Cockpit").gameObject.SetActive(true);
+        //player.transform.Find("Camera").gameObject.SetActive(true);
+        //player.transform.position = Vector3.zero;
+        player.gameObject.SetActive(false);
         sendCharacter();
 
-        SceneManager.LoadScene("TestScene");
+        SceneManager.LoadScene("Lobby");
     }
 
     private void sendCharacter()

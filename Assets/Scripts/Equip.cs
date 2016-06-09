@@ -16,6 +16,8 @@ public class Equip : MonoBehaviour
     public Sprite icon;
     AudioSource audioSource;
 
+    private ServerSpawner serverSpawner;
+
     [Header("Turret")]
     public float turretDuration;
     public float timeBetweenShots;
@@ -61,6 +63,8 @@ public class Equip : MonoBehaviour
         else player.hud.defensive.text = player.defensive.info;
 
         audioSource = GetComponent<AudioSource>();
+
+        serverSpawner = GetComponent<ServerSpawner>();
 	}
 	
 	void Update () 
@@ -147,6 +151,7 @@ public class Equip : MonoBehaviour
 
         active = false;
         nextActivationTime = Time.time + cooldown;
+        serverSpawner.CmdFire(m.gameObject);
         StopCoroutine(equipName);
     }
 

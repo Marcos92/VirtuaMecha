@@ -166,7 +166,7 @@ public class Player : MonoBehaviour
         #endregion
 
         //if (Input.GetKeyDown(KeyCode.Space)) StartCoroutine("EMPEffect", 5);
-        if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
+        //if (Input.GetKeyDown(KeyCode.Space)) ChangeHealth(-50);
         //if (Input.GetKeyDown(KeyCode.Space)) rightArm.ChangeHealth(-5);
     }
 
@@ -218,7 +218,11 @@ public class Player : MonoBehaviour
         currentHealth += value; //Add value to current life
 
         if (currentHealth > maxHealth) currentHealth = maxHealth; //Make sure current health isn't bigger than max health
-        else if (currentHealth <= 0) Destroy(gameObject);
+        else if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+            
 
         hud.health.text = currentHealth.ToString("0"); //Write health to HUD
         

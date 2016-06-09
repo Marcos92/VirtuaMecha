@@ -12,6 +12,7 @@ public class NetworkLobbyHook : LobbyHook
     {
         LobbyPlayer lobby = lobbyPlayer.GetComponent<LobbyPlayer>();
         NetworkLobbyInfo info = gamePlayer.GetComponent<NetworkLobbyInfo>();
+        MechaInit init = gamePlayer.GetComponent<MechaInit>();
 
         info.lobbyIndex = lobby.slot;
         Debug.Log("Lobby index = " + info.lobbyIndex);
@@ -19,5 +20,10 @@ public class NetworkLobbyHook : LobbyHook
         Debug.Log("Character index = " + info.characterIndex);
         info.playerName = lobby.playerName;
         Debug.Log("Name index = " + info.playerName);
+        init.LeftWeapon = CharacterChoice.instance.LeftWeapon;
+        init.RightWeapon = CharacterChoice.instance.RightWeapon;
+        init.Offensive = CharacterChoice.instance.Offensive;
+        init.Defensive = CharacterChoice.instance.Defensive;
+        gamePlayer.GetComponent<Player>().controlable = true;
     }
 }
