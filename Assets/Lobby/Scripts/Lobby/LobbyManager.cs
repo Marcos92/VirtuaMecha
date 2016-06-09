@@ -178,6 +178,7 @@ namespace Prototype.NetworkLobby
         public void SimpleBackClbk()
         {
             ChangeTo(mainMenuPanel);
+            //ControllerManager.instance.SetFocus(0);
         }
                  
         public void StopHostClbk()
@@ -194,6 +195,7 @@ namespace Prototype.NetworkLobby
 
             
             ChangeTo(mainMenuPanel);
+            //ControllerManager.instance.SetFocus(1);
         }
 
         public void StopClientClbk()
@@ -206,12 +208,14 @@ namespace Prototype.NetworkLobby
             }
 
             ChangeTo(mainMenuPanel);
+            //ControllerManager.instance.SetFocus(0);
         }
 
         public void StopServerClbk()
         {
             StopServer();
             ChangeTo(mainMenuPanel);
+            //ControllerManager.instance.SetFocus(0);
         }
 
         class KickMsg : MessageBase { }

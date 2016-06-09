@@ -11,7 +11,7 @@ namespace Prototype.NetworkLobby
     //Any LobbyHook can then grab it and pass those value to the game player prefab (see the Pong Example in the Samples Scenes)
     public class LobbyPlayer : NetworkLobbyPlayer
     {
-        static Color[] Colors = new Color[] { Color.magenta, Color.red, Color.cyan, Color.blue, Color.green, Color.yellow };
+        static Color[] Colors = new Color[] { Color.red, Color.blue };
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
@@ -23,6 +23,8 @@ namespace Prototype.NetworkLobby
 
         public GameObject localIcone;
         public GameObject remoteIcone;
+
+        public int characterIndex;
 
         //OnMyName function will be invoked on clients when server change the value of playerName
         [SyncVar(hook = "OnMyName")]
@@ -117,7 +119,7 @@ namespace Prototype.NetworkLobby
 
             //have to use child count of player prefab already setup as "this.slot" is not set yet
             if (playerName == "")
-                CmdNameChanged("Player" + (LobbyPlayerList._instance.playerListContentTransform.childCount-1));
+                CmdNameChanged("Mecha0" + (LobbyPlayerList._instance.playerListContentTransform.childCount-1));
 
             //we switch from simple name display to name input
             colorButton.interactable = true;
@@ -193,6 +195,15 @@ namespace Prototype.NetworkLobby
         {
             playerColor = newColor;
             colorButton.GetComponent<Image>().color = newColor;
+            toCharacter();
+        }
+
+        void toCharacter()
+        {
+            if (playerColor == Color.red)
+                characterIndex = 0;
+            else
+                characterIndex = 1;
         }
 
         //===== UI Handler
@@ -201,7 +212,13 @@ namespace Prototype.NetworkLobby
         //so that all client get the new value throught syncvar
         public void OnColorClicked()
         {
-            CmdColorChange();
+            NetworkLobbyManager tmpLobby = gameObject.GetComponentInParent<NetworkLobbyManager>();
+            int counter = 0;
+            foreach (NetworkLobbyPlayer player in tmpLobby.lobbySlots)
+                if (player != null)
+                    counter++;
+            if (counter != tmpLobby.maxPlayers)
+                CmdColorChange();
         }
 
         public void OnReadyClicked()

@@ -27,6 +27,8 @@ public class EquipMenu : MonoBehaviour
     public Image iconOff;
     public Image iconDef;
 
+    int LeftWeapon, RightWeapon, Offensive, Defensive;
+
 	// Use this for initialization
 	void Start () 
     {
@@ -64,13 +66,13 @@ public class EquipMenu : MonoBehaviour
 
     public void CycleLeftWeapon(int direction)
     {
-        int i = weapons.IndexOf(selectedLeftWeapon); //Checks index of current weapon
+        LeftWeapon = weapons.IndexOf(selectedLeftWeapon); //Checks index of current weapon
 
-        if (i + direction < 0) i = weapons.Count - 1; //Checks if index is 0
-        else if (i + direction > weapons.Count - 1) i = 0;
-        else i += direction;
+        if (LeftWeapon + direction < 0) LeftWeapon = weapons.Count - 1; //Checks if index is 0
+        else if (LeftWeapon + direction > weapons.Count - 1) LeftWeapon = 0;
+        else LeftWeapon += direction;
 
-        selectedLeftWeapon = weapons[i];
+        selectedLeftWeapon = weapons[LeftWeapon];
         player.leftArm.EquipWeapon(selectedLeftWeapon); //Equips weapon
 
         textLW.text = selectedLeftWeapon.description + "\nAmmo capacity: " + selectedLeftWeapon.maxAmmo + "\nRate of fire: " + selectedLeftWeapon.timeBetweenShots + "ms";
@@ -79,13 +81,13 @@ public class EquipMenu : MonoBehaviour
 
     public void CycleRightWeapon(int direction)
     {
-        int i = weapons.IndexOf(selectedRightWeapon); //Checks index of current weapon
+        RightWeapon = weapons.IndexOf(selectedRightWeapon); //Checks index of current weapon
 
-        if (i + direction < 0) i = weapons.Count - 1; //Checks if index is 0
-        else if (i + direction > weapons.Count - 1) i = 0;
-        else i += direction;
+        if (RightWeapon + direction < 0) RightWeapon = weapons.Count - 1; //Checks if index is 0
+        else if (RightWeapon + direction > weapons.Count - 1) RightWeapon = 0;
+        else RightWeapon += direction;
 
-        selectedRightWeapon = weapons[i];
+        selectedRightWeapon = weapons[RightWeapon];
         player.rightArm.EquipWeapon(selectedRightWeapon); //Equips weapon
 
         textRW.text = selectedRightWeapon.description + "\nAmmo capacity: " + selectedRightWeapon.maxAmmo + "\nRate of fire: " + selectedRightWeapon.timeBetweenShots + "ms";
@@ -94,13 +96,13 @@ public class EquipMenu : MonoBehaviour
 
     public void CycleOffensive(int direction)
     {
-        int i = offensive.IndexOf(selectedOffensive); //Checks index of current equip
+        Offensive = offensive.IndexOf(selectedOffensive); //Checks index of current equip
 
-        if (i + direction < 0) i = offensive.Count - 1; //Checks if index is 0
-        else if (i + direction > offensive.Count - 1) i = 0;
-        else i += direction;
+        if (Offensive + direction < 0) Offensive = offensive.Count - 1; //Checks if index is 0
+        else if (Offensive + direction > offensive.Count - 1) Offensive = 0;
+        else Offensive += direction;
 
-        selectedOffensive = offensive[i];
+        selectedOffensive = offensive[Offensive];
         player.EquipEquipment(selectedOffensive); //Equips equipment
 
         textOff.text = selectedOffensive.description + "\nCooldown: " + selectedOffensive.cooldown + "s";
@@ -109,13 +111,13 @@ public class EquipMenu : MonoBehaviour
 
     public void CycleDefensive(int direction)
     {
-        int i = defensive.IndexOf(selectedDefensive); //Checks index of current equip
+        Defensive = defensive.IndexOf(selectedDefensive); //Checks index of current equip
 
-        if (i + direction < 0) i = defensive.Count - 1; //Checks if index is 0
-        else if (i + direction > defensive.Count - 1) i = 0;
-        else i += direction;
+        if (Defensive + direction < 0) Defensive = defensive.Count - 1; //Checks if index is 0
+        else if (Defensive + direction > defensive.Count - 1) Defensive = 0;
+        else Defensive += direction;
 
-        selectedDefensive = defensive[i];
+        selectedDefensive = defensive[Defensive];
         player.EquipEquipment(selectedDefensive); //Equips equipment
 
         textDef.text = selectedDefensive.description + "\nCooldown: " + selectedDefensive.cooldown + "s";
@@ -132,7 +134,17 @@ public class EquipMenu : MonoBehaviour
         player.transform.Find("Cockpit").gameObject.SetActive(true);
         player.transform.Find("Camera").gameObject.SetActive(true);
         player.transform.position = Vector3.zero;
+        sendCharacter();
 
         SceneManager.LoadScene("TestScene");
+    }
+
+    private void sendCharacter()
+    {
+        CharacterChoice tmp = GameObject.Find("CharacterChoice").GetComponent<CharacterChoice>();
+        tmp.LeftWeapon = LeftWeapon;
+        tmp.RightWeapon = RightWeapon;
+        tmp.Offensive = Offensive;
+        tmp.Defensive = Defensive;
     }
 }

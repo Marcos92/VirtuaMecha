@@ -39,6 +39,7 @@ namespace Prototype.NetworkLobby
             lobbyManager.StartClient();
 
             lobbyManager.backDelegate = lobbyManager.StopClientClbk;
+            //ControllerManager.instance.SetFocus(1);
             lobbyManager.DisplayIsConnecting();
 
             lobbyManager.SetServerInfo("Connecting...", lobbyManager.networkAddress);
@@ -65,16 +66,19 @@ namespace Prototype.NetworkLobby
                 lobbyManager.OnMatchCreate);
 
             lobbyManager.backDelegate = lobbyManager.StopHost;
+            //ControllerManager.instance.SetFocus(1);
             lobbyManager._isMatchmaking = true;
             lobbyManager.DisplayIsConnecting();
 
             lobbyManager.SetServerInfo("Matchmaker Host", lobbyManager.matchHost);
+            
         }
 
         public void OnClickOpenServerList()
         {
             lobbyManager.StartMatchMaker();
             lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+            //ControllerManager.instance.SetFocus(1);
             lobbyManager.ChangeTo(lobbyServerList);
         }
 
