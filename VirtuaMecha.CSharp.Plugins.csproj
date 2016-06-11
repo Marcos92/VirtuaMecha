@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -118,7 +112,13 @@
     <None Include="Assets\Fonts\OpenSans\License!.txt" />
     <None Include="Assets\Lobby\Documentation.txt" />
     <None Include="Assets\Lobby\Instruction.txt" />
+    <None Include="Assets\Shaders\Efectsto shaders\CallShading2.shader" />
+    <None Include="Assets\Shaders\Efectsto shaders\CellShaderTest.shader" />
     <None Include="Assets\Shaders\Efectsto shaders\Escudo1.shader" />
+    <None Include="Assets\Shaders\Efectsto shaders\Shiedtry.shader" />
+    <None Include="Assets\Shaders\Efectsto shaders\Shieldtry2.shader" />
+    <None Include="Assets\Shaders\Efectsto shaders\Test2.shader" />
+    <None Include="Assets\Shaders\Efectsto shaders\hologram.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
