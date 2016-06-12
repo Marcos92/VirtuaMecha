@@ -1,4 +1,4 @@
-Base path: D:/Programs/Unity/Editor/Data
+Base path: D:/Programas Instalados/Editor/Data
 Cmd: getPlatforms
 Cmd: preprocess
   insize=8715 outsize=2134 ok=1
@@ -21,7 +21,7 @@ Cmd: preprocess
 Cmd: preprocess
   insize=983 outsize=309 ok=1
 Cmd: preprocess
-  insize=1302 outsize=1413 ok=1
+  insize=1300 outsize=1411 ok=1
 Cmd: preprocess
   insize=1991 outsize=491 ok=1
 Cmd: preprocess
@@ -31,19 +31,7 @@ Cmd: preprocess
 Cmd: preprocess
   insize=1518 outsize=2267 ok=1
 Cmd: preprocess
-  insize=12690 outsize=5677 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1789 outsize=1013 kw=SHADOWS_DEPTH pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1789 outsize=281 kw=SHADOWS_DEPTH pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=3025 outsize=937 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=3025 outsize=1393 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1733 outsize=1125 kw=SHADOWS_DEPTH pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1733 outsize=253 kw=SHADOWS_DEPTH pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
+  insize=12439 outsize=5599 ok=1
 Cmd: preprocess
   insize=1223 outsize=404 ok=1
 Cmd: preprocess
@@ -85,9 +73,9 @@ Cmd: preprocess
 Cmd: preprocess
   insize=4990 outsize=1857 ok=1
 Cmd: preprocess
-  insize=12612 outsize=5651 ok=1
+  insize=12389 outsize=5581 ok=1
 Cmd: preprocess
-  insize=2931 outsize=844 ok=1
+  insize=2930 outsize=843 ok=1
 Cmd: preprocess
   insize=13303 outsize=1949 ok=1
 Cmd: preprocess
